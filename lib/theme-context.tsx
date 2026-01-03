@@ -1,7 +1,7 @@
 "use client"
 
-import { createContext, useContext, useEffect, type ReactNode } from "react"
-import { useProgression, type WashiRoll } from "./progression-context"
+import { createContext, useContext, useLayoutEffect, type ReactNode } from "react"
+import { useProgression, WASHI_ROLLS, type WashiRoll } from "./progression-context"
 
 interface ThemeContextValue {
   currentRoll: WashiRoll
@@ -59,12 +59,13 @@ function generatePatternCSS(roll: WashiRoll): string {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const { getSelectedRoll } = useProgression()
-  const currentRoll = getSelectedRoll()
+  const { selectedRoll } = useProgression()
+
+  const currentRoll = WASHI_ROLLS.find((r) => r.id === selectedRoll) || WASHI_ROLLS[0]
   const patternCSS = generatePatternCSS(currentRoll)
 
-  // Apply CSS custom properties for the selected roll
-  useEffect(() => {
+  // This prevents flashes of unstyled content
+  useLayoutEffect(() => {
     const root = document.documentElement
     root.style.setProperty("--theme-primary", currentRoll.colors.primary)
     root.style.setProperty("--theme-secondary", currentRoll.colors.secondary)
@@ -72,7 +73,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty("--theme-muted", currentRoll.colors.muted)
     root.style.setProperty("--theme-pattern", patternCSS)
     root.style.setProperty("--theme-pattern-size", getPatternSize(currentRoll.pattern))
-  }, [currentRoll, patternCSS])
+  }, [selectedRoll, currentRoll, patternCSS])
 
   const getPatternSVG = (color?: string) => {
     return getPatternSVGString(currentRoll.pattern, color || currentRoll.colors.secondary)

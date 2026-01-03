@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react"
 import type { GameMode } from "./game-types"
 
 export interface WashiRoll {
@@ -328,53 +328,69 @@ const DEFAULT_STATS: ProgressionStats = {
 }
 
 export function ProgressionProvider({ children }: { children: ReactNode }) {
-  const [stats, setStats] = useState<ProgressionStats>(DEFAULT_STATS)
-  const [swatches, setSwatches] = useState(0)
-  const [unlockedRolls, setUnlockedRolls] = useState<string[]>(["starter-mint"]) // Start with mint roll
-  const [selectedRoll, setSelectedRollState] = useState("starter-mint")
-
-  // Load from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("washiway-progression")
-    if (saved) {
-      try {
+  const [stats, setStats] = useState<ProgressionStats>(() => {
+    if (typeof window === "undefined") return DEFAULT_STATS
+    try {
+      const saved = localStorage.getItem("washiway-progression")
+      if (saved) {
         const data = JSON.parse(saved)
-        setStats(data.stats || DEFAULT_STATS)
-        setSwatches(data.swatches || 0)
-        setUnlockedRolls(data.unlockedRolls || ["starter-mint"])
-        setSelectedRollState(data.selectedRoll || "starter-mint")
-      } catch {
-        // ignore
+        return data.stats || DEFAULT_STATS
       }
-    }
-  }, [])
+    } catch {}
+    return DEFAULT_STATS
+  })
 
-  // Save to localStorage
-  const saveProgress = (
-    newStats: ProgressionStats,
-    newSwatches: number,
-    newUnlocked: string[],
-    newSelected: string,
-  ) => {
-    localStorage.setItem(
-      "washiway-progression",
-      JSON.stringify({
-        stats: newStats,
-        swatches: newSwatches,
-        unlockedRolls: newUnlocked,
-        selectedRoll: newSelected,
-      }),
-    )
-  }
+  const [swatches, setSwatches] = useState(() => {
+    if (typeof window === "undefined") return 0
+    try {
+      const saved = localStorage.getItem("washiway-progression")
+      if (saved) {
+        const data = JSON.parse(saved)
+        return data.swatches || 0
+      }
+    } catch {}
+    return 0
+  })
+
+  const [unlockedRolls, setUnlockedRolls] = useState<string[]>(() => {
+    if (typeof window === "undefined") return ["starter-mint"]
+    try {
+      const saved = localStorage.getItem("washiway-progression")
+      if (saved) {
+        const data = JSON.parse(saved)
+        const rolls = data.unlockedRolls || ["starter-mint"]
+        if (!rolls.includes("starter-mint")) rolls.push("starter-mint")
+        return rolls
+      }
+    } catch {}
+    return ["starter-mint"]
+  })
+
+  const [selectedRoll, setSelectedRollState] = useState(() => {
+    if (typeof window === "undefined") return "starter-mint"
+    try {
+      const saved = localStorage.getItem("washiway-progression")
+      if (saved) {
+        const data = JSON.parse(saved)
+        const roll = data.selectedRoll || "starter-mint"
+        const rollExists = WASHI_ROLLS.some((r) => r.id === roll)
+        return rollExists ? roll : "starter-mint"
+      }
+    } catch {}
+    return "starter-mint"
+  })
 
   const getRoll = (id: string) => WASHI_ROLLS.find((r) => r.id === id)
 
   const getSelectedRoll = () => getRoll(selectedRoll) || WASHI_ROLLS[0]
 
   const setSelectedRoll = (id: string) => {
-    if (unlockedRolls.includes(id)) {
+    if (id === "starter-mint" || unlockedRolls.includes(id)) {
       setSelectedRollState(id)
       saveProgress(stats, swatches, unlockedRolls, id)
+      console.log("[v0] Selected roll changed to:", id)
+    } else {
+      console.log("[v0] Cannot select locked roll:", id, "unlocked:", unlockedRolls)
     }
   }
 
@@ -447,7 +463,6 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
       modesPlayed: stats.modesPlayed.includes(mode) ? stats.modesPlayed : [...stats.modesPlayed, mode],
     }
 
-    // Calculate swatches earned (1 per correct + bonus for streaks)
     const swatchesEarned = correct + Math.floor(maxStreak / 5) * 2
 
     const newUnlocks = checkUnlocks(newStats)
@@ -460,6 +475,23 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
     saveProgress(newStats, newSwatches, newUnlockedRolls, selectedRoll)
 
     return { swatchesEarned, newUnlocks }
+  }
+
+  const saveProgress = (
+    newStats: ProgressionStats,
+    newSwatches: number,
+    newUnlocked: string[],
+    newSelected: string,
+  ) => {
+    localStorage.setItem(
+      "washiway-progression",
+      JSON.stringify({
+        stats: newStats,
+        swatches: newSwatches,
+        unlockedRolls: newUnlocked,
+        selectedRoll: newSelected,
+      }),
+    )
   }
 
   return (
