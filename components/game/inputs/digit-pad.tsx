@@ -74,23 +74,26 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
 
   return (
     <div className="space-y-4">
-      {/* Input display styled as a label/sticky */}
       <div className="text-center">
         <div
           className={cn(
-            "inline-flex items-center justify-center min-w-[140px] min-h-[72px] px-8 rounded-xl",
-            "bg-card border-2",
-            "font-mono text-5xl font-bold text-card-foreground",
+            "inline-flex items-center justify-center min-w-[140px] min-h-[72px] px-8 rounded-xl relative overflow-hidden",
+            "bg-pastel-yellow/70",
+            "font-mono text-5xl font-bold text-foreground",
             "transition-all duration-150",
-            "shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
-            input ? "border-pastel-blue" : "border-border",
+            input ? "shadow-[0_4px_12px_rgba(0,0,0,0.1)]" : "shadow-[0_2px_8px_rgba(0,0,0,0.06)]",
           )}
+          style={{
+            backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.4) 8px, rgba(255,255,255,0.4) 10px)`,
+          }}
         >
-          {displayValue || <span className="text-muted-foreground/40">?</span>}
+          {/* Torn edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-r from-black/[0.06] to-transparent" />
+          <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-gradient-to-l from-black/[0.06] to-transparent" />
+          <span className="relative z-10">{displayValue || <span className="text-foreground/30">?</span>}</span>
         </div>
       </div>
 
-      {/* Keypad as sticker buttons */}
       <div className="grid grid-cols-3 gap-3 max-w-[280px] mx-auto">
         {digits.map((digit) => (
           <motion.button
@@ -103,25 +106,29 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
               else handleDigit(digit)
             }}
             className={cn(
-              "py-5 rounded-xl text-2xl font-bold",
+              "py-5 rounded-xl text-2xl font-bold relative overflow-hidden",
               "transition-all duration-100",
               "disabled:opacity-50 disabled:pointer-events-none",
               digit === "neg"
                 ? cn(
-                    "bg-muted text-muted-foreground border-2 border-transparent",
-                    isNegative && "bg-pastel-peach text-foreground border-pastel-peach/50",
+                    "bg-pastel-lavender/50 text-foreground",
+                    isNegative && "bg-pastel-peach text-foreground shadow-[0_3px_0_rgba(0,0,0,0.08)]",
                   )
                 : digit === "del"
-                  ? "bg-muted text-muted-foreground"
+                  ? "bg-pastel-pink/50 text-foreground"
                   : cn(
                       "bg-card text-card-foreground",
-                      "border-2 border-border",
+                      "border border-border",
                       "shadow-[0_3px_0_rgba(0,0,0,0.06)]",
                       "active:shadow-[0_1px_0_rgba(0,0,0,0.06)]",
                     ),
             )}
           >
-            {digit === "del" ? "←" : digit === "neg" ? "±" : digit}
+            {/* Subtle shine for number buttons */}
+            {digit !== "del" && digit !== "neg" && (
+              <div className="absolute top-1 right-2 w-4 h-1 bg-white/30 rounded-full transform -rotate-12" />
+            )}
+            <span className="relative z-10">{digit === "del" ? "←" : digit === "neg" ? "±" : digit}</span>
           </motion.button>
         ))}
       </div>

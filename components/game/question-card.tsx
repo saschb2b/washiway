@@ -53,9 +53,16 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
           className,
         )}
       >
+        <div
+          className="absolute -top-1 -left-3 w-14 h-4 bg-pastel-mint/60 rounded-sm transform -rotate-[20deg]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.5) 3px, rgba(255,255,255,0.5) 5px)`,
+          }}
+        />
+
         {/* Subtle ruled lines for index card feel */}
         <div
-          className="absolute inset-x-6 top-6 bottom-6 pointer-events-none opacity-20"
+          className="absolute inset-x-6 top-6 bottom-6 pointer-events-none opacity-15"
           style={{
             backgroundImage: `repeating-linear-gradient(
               transparent, transparent 26px,

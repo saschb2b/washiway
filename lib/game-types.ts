@@ -1,4 +1,4 @@
-export type GameMode = "truth" | "compare" | "digit" | "missing" | "combo"
+export type GameMode = "truth" | "compare" | "digit" | "missing" | "combo" | "match"
 
 export type GameState = "splash" | "menu" | "playing" | "results"
 
@@ -63,6 +63,13 @@ export const GAME_MODES: ModeConfig[] = [
     description: "Answers link together",
     colorClass: "bg-pastel-lavender",
     bgClass: "from-pastel-lavender/20 to-pastel-lavender/5",
+  },
+  {
+    id: "match",
+    name: "Tape Match",
+    description: "Match the pattern rule",
+    colorClass: "bg-pastel-yellow",
+    bgClass: "from-pastel-yellow/20 to-pastel-yellow/5",
   },
 ]
 

@@ -22,6 +22,7 @@ interface Translations {
     digit: { name: string; description: string }
     missing: { name: string; description: string }
     combo: { name: string; description: string }
+    match: { name: string; description: string }
   }
   // Mode config sheet
   config: {
@@ -64,6 +65,14 @@ interface Translations {
     left: string
     right: string
   }
+  // Binder translations
+  binder: {
+    title: string
+    rolls: string
+    achievements: string
+    swatches: string
+    unlockNew: string
+  }
 }
 
 const translations: Record<Language, Translations> = {
@@ -82,6 +91,7 @@ const translations: Record<Language, Translations> = {
       digit: { name: "Quick Solve", description: "Type the answer" },
       missing: { name: "Find the Blank", description: "What number is missing?" },
       combo: { name: "Chain Mode", description: "Answers link together" },
+      match: { name: "Tape Match", description: "Match the pattern rule" },
     },
     config: {
       yourBest: "Your Best",
@@ -125,6 +135,13 @@ const translations: Record<Language, Translations> = {
       left: "LEFT",
       right: "RIGHT",
     },
+    binder: {
+      title: "My Washi Binder",
+      rolls: "Tape Rolls",
+      achievements: "Achievements",
+      swatches: "Swatches",
+      unlockNew: "New roll unlocked!",
+    },
   },
   de: {
     splash: {
@@ -141,6 +158,7 @@ const translations: Record<Language, Translations> = {
       digit: { name: "Schnell Lösen", description: "Tippe die Antwort" },
       missing: { name: "Finde die Lücke", description: "Welche Zahl fehlt?" },
       combo: { name: "Ketten-Modus", description: "Antworten verknüpfen sich" },
+      match: { name: "Tape Match", description: "Finde die passende Regel" },
     },
     config: {
       yourBest: "Dein Bestes",
@@ -183,6 +201,13 @@ const translations: Record<Language, Translations> = {
       false: "FALSCH",
       left: "LINKS",
       right: "RECHTS",
+    },
+    binder: {
+      title: "Mein Washi Binder",
+      rolls: "Tape Rollen",
+      achievements: "Erfolge",
+      swatches: "Swatches",
+      unlockNew: "Neue Rolle freigeschaltet!",
     },
   },
 }

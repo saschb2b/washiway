@@ -107,7 +107,7 @@ export function WashiTape({ color = "mint", className, pattern = "solid" }: Wash
 
 interface WashiTapeStripProps {
   children: React.ReactNode
-  color: "mint" | "pink" | "blue" | "peach" | "lavender"
+  color: "mint" | "pink" | "blue" | "peach" | "lavender" | "yellow"
   pattern?: "dots" | "stripes" | "dashes" | "zigzag"
   className?: string
   onClick?: () => void
@@ -119,6 +119,7 @@ const washiStripColors = {
   blue: { bg: "bg-pastel-blue", border: "border-pastel-blue" },
   peach: { bg: "bg-pastel-peach", border: "border-pastel-peach" },
   lavender: { bg: "bg-pastel-lavender", border: "border-pastel-lavender" },
+  yellow: { bg: "bg-pastel-yellow", border: "border-pastel-yellow" },
 }
 
 export function WashiTapeStrip({ children, color, pattern = "dots", className, onClick }: WashiTapeStripProps) {

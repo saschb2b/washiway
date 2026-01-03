@@ -72,9 +72,15 @@ export function BurstIndicator() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="px-4 py-2 rounded-full bg-pastel-peach/30 border border-pastel-peach"
+          className="px-5 py-2 rounded-lg bg-pastel-peach/70 relative overflow-hidden"
+          style={{
+            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.4) 4px, rgba(255,255,255,0.4) 8px)`,
+          }}
         >
-          <span className="text-sm font-bold text-foreground">
+          {/* Torn edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-r from-black/[0.06] to-transparent" />
+          <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.06] to-transparent" />
+          <span className="text-sm font-bold text-foreground relative z-10">
             {t.game.burst} {burstCount + 1}/{burstLength}
           </span>
         </motion.div>
@@ -83,15 +89,14 @@ export function BurstIndicator() {
   )
 }
 
-// Streak display with dots
 export function StreakDisplay() {
   const { streak, multiplier } = useGame()
 
   if (streak === 0) return null
 
   return (
-    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center justify-end gap-1 mt-1">
-      <div className={cn("flex gap-0.5", streak >= 10 && "animate-streak-glow")}>
+    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center justify-end gap-1.5 mt-1">
+      <div className={cn("flex gap-1", streak >= 10 && "animate-streak-glow")}>
         {Array.from({ length: Math.min(streak, 10) }).map((_, i) => (
           <motion.div
             key={i}
@@ -99,7 +104,7 @@ export function StreakDisplay() {
             animate={{ scale: 1 }}
             transition={{ delay: i * 0.02 }}
             className={cn(
-              "w-2 h-2 rounded-full",
+              "w-2.5 h-2.5 rounded-sm",
               streak >= 10 ? "bg-pastel-peach" : streak >= 5 ? "bg-pastel-mint" : "bg-pastel-blue",
             )}
           />

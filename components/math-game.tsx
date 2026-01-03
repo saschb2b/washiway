@@ -8,6 +8,8 @@ import { ResultsScreen } from "./game/results-screen"
 import { SettingsProvider, useSettings } from "@/lib/settings-context"
 import { AudioProvider } from "@/lib/audio-context"
 import { I18nProvider } from "@/lib/i18n-context"
+import { ProgressionProvider } from "@/lib/progression-context"
+import { ThemeProvider } from "@/lib/theme-context"
 import type { GameMode, GameState, GameStats } from "@/lib/game-types"
 
 function MathGameInner() {
@@ -73,7 +75,11 @@ export function MathGame() {
     <I18nProvider>
       <AudioProvider>
         <SettingsProvider>
-          <MathGameInner />
+          <ProgressionProvider>
+            <ThemeProvider>
+              <MathGameInner />
+            </ThemeProvider>
+          </ProgressionProvider>
         </SettingsProvider>
       </AudioProvider>
     </I18nProvider>

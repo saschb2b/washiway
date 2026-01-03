@@ -4,22 +4,23 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import type { GameMode } from "@/lib/game-types"
 import { ModeConfigSheet } from "./mode-config-sheet"
+import { WashiBinder } from "./washi-binder"
 import { useAudio } from "@/lib/audio-context"
 import { useI18n } from "@/lib/i18n-context"
 import { LanguageToggle } from "./language-toggle"
-import { Volume2, VolumeX, ChevronRight } from "lucide-react"
+import { Volume2, VolumeX, ChevronRight, BookOpen } from "lucide-react"
 import { PaperBackground, WashiwayLogo, WashiTapeStrip } from "@/components/ui/stationery"
 
 interface StartScreenProps {
   onStartGame: (mode: GameMode) => void
 }
 
-const MODE_IDS: GameMode[] = ["truth", "compare", "digit", "missing", "combo"]
+const MODE_IDS: GameMode[] = ["truth", "compare", "digit", "missing", "combo", "match"]
 
 const MODE_STYLES: Record<
   GameMode,
   {
-    color: "mint" | "pink" | "blue" | "peach" | "lavender"
+    color: "mint" | "pink" | "blue" | "peach" | "lavender" | "yellow"
     pattern: "dots" | "stripes" | "dashes" | "zigzag"
     icon: string
   }
@@ -29,10 +30,12 @@ const MODE_STYLES: Record<
   digit: { color: "mint", pattern: "dashes", icon: "#" },
   missing: { color: "pink", pattern: "zigzag", icon: "_" },
   combo: { color: "lavender", pattern: "dots", icon: "★" },
+  match: { color: "yellow", pattern: "stripes", icon: "≡" },
 }
 
 export function StartScreen({ onStartGame }: StartScreenProps) {
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null)
+  const [isBinderOpen, setIsBinderOpen] = useState(false)
   const { play, isMuted, setMuted } = useAudio()
   const { t } = useI18n()
 
@@ -49,23 +52,38 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
           <LanguageToggle />
         </motion.div>
 
-        {/* Mute button */}
-        <motion.button
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          onClick={() => {
-            play("tap")
-            setMuted(!isMuted)
-          }}
-          className="absolute top-4 right-4 z-20 w-11 h-11 rounded-xl bg-card border-2 border-border flex items-center justify-center hover:bg-muted transition-colors shadow-sm"
+          className="absolute top-4 right-4 z-20 flex items-center gap-2"
         >
-          {isMuted ? (
-            <VolumeX className="w-5 h-5 text-muted-foreground" />
-          ) : (
-            <Volume2 className="w-5 h-5 text-foreground" />
-          )}
-        </motion.button>
+          {/* Binder button */}
+          <button
+            onClick={() => {
+              play("tap")
+              setIsBinderOpen(true)
+            }}
+            className="w-11 h-11 rounded-xl bg-pastel-peach border-2 border-black/[0.08] flex items-center justify-center hover:scale-105 transition-transform shadow-sm"
+          >
+            <BookOpen className="w-5 h-5 text-foreground" />
+          </button>
+
+          {/* Mute button */}
+          <button
+            onClick={() => {
+              play("tap")
+              setMuted(!isMuted)
+            }}
+            className="w-11 h-11 rounded-xl bg-card border-2 border-border flex items-center justify-center hover:bg-muted transition-colors shadow-sm"
+          >
+            {isMuted ? (
+              <VolumeX className="w-5 h-5 text-muted-foreground" />
+            ) : (
+              <Volume2 className="w-5 h-5 text-foreground" />
+            )}
+          </button>
+        </motion.div>
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -187,6 +205,8 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             onStartGame(mode)
           }}
         />
+
+        <WashiBinder isOpen={isBinderOpen} onClose={() => setIsBinderOpen(false)} />
       </div>
     </PaperBackground>
   )

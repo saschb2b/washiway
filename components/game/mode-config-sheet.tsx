@@ -21,6 +21,7 @@ const MODE_COLORS: Record<GameMode, { color: string; icon: string }> = {
   digit: { color: "bg-pastel-mint", icon: "#" },
   missing: { color: "bg-pastel-peach", icon: "_" },
   combo: { color: "bg-pastel-lavender", icon: "★" },
+  match: { color: "bg-pastel-yellow", icon: "≡" },
 }
 
 export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps) {
