@@ -7,7 +7,18 @@ export interface WashiRoll {
   id: string
   name: string
   nameDE: string
-  pattern: "pokeballs" | "cats" | "dogs" | "frogs" | "flowers" | "snowflakes" | "bees" | "leaves" | "music" | "stars"
+  pattern:
+    | "pokeballs"
+    | "cats"
+    | "dogs"
+    | "frogs"
+    | "flowers"
+    | "snowflakes"
+    | "bees"
+    | "leaves"
+    | "music"
+    | "stars"
+    | "mint"
   colors: {
     primary: string
     secondary: string
@@ -30,10 +41,10 @@ export interface Achievement {
 
 export const WASHI_ROLLS: WashiRoll[] = [
   {
-    id: "starter-stars",
+    id: "starter-mint",
     name: "Minty Fresh",
     nameDE: "Frische Minze",
-    pattern: "stars",
+    pattern: "mint",
     colors: {
       primary: "oklch(0.95 0.03 175)", // soft mint
       secondary: "oklch(0.70 0.08 175)", // deeper mint
@@ -319,8 +330,8 @@ const DEFAULT_STATS: ProgressionStats = {
 export function ProgressionProvider({ children }: { children: ReactNode }) {
   const [stats, setStats] = useState<ProgressionStats>(DEFAULT_STATS)
   const [swatches, setSwatches] = useState(0)
-  const [unlockedRolls, setUnlockedRolls] = useState<string[]>(["starter-stars"]) // Start with one roll
-  const [selectedRoll, setSelectedRollState] = useState("starter-stars")
+  const [unlockedRolls, setUnlockedRolls] = useState<string[]>(["starter-mint"]) // Start with mint roll
+  const [selectedRoll, setSelectedRollState] = useState("starter-mint")
 
   // Load from localStorage
   useEffect(() => {
@@ -330,8 +341,8 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
         const data = JSON.parse(saved)
         setStats(data.stats || DEFAULT_STATS)
         setSwatches(data.swatches || 0)
-        setUnlockedRolls(data.unlockedRolls || ["starter-stars"])
-        setSelectedRollState(data.selectedRoll || "starter-stars")
+        setUnlockedRolls(data.unlockedRolls || ["starter-mint"])
+        setSelectedRollState(data.selectedRoll || "starter-mint")
       } catch {
         // ignore
       }

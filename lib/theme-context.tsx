@@ -19,6 +19,7 @@ export function useTheme() {
 
 function getPatternSVGString(pattern: WashiRoll["pattern"], color: string): string {
   const patterns: Record<WashiRoll["pattern"], string> = {
+    mint: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><ellipse cx="9" cy="9" rx="3" ry="5" fill="${color}" transform="rotate(-15 9 9)"/><line x1="9" y1="5" x2="9" y2="14" stroke="white" strokeWidth="0.8" opacity="0.4"/></svg>`,
     pokeballs: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="7" fill="none" stroke="${color}" strokeWidth="1.5"/><line x1="3" y1="10" x2="17" y2="10" stroke="${color}" strokeWidth="1.5"/><circle cx="10" cy="10" r="2.5" fill="${color}"/></svg>`,
     cats: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="14" r="6" fill="${color}"/><polygon points="6,8 8,14 4,14" fill="${color}"/><polygon points="18,8 16,14 20,14" fill="${color}"/><circle cx="10" cy="13" r="1" fill="white"/><circle cx="14" cy="13" r="1" fill="white"/><ellipse cx="12" cy="15.5" rx="1" ry="0.7" fill="white"/></svg>`,
     dogs: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><ellipse cx="11" cy="14" rx="4" ry="3.5" fill="${color}"/><circle cx="6" cy="9" r="2" fill="${color}"/><circle cx="11" cy="7" r="2" fill="${color}"/><circle cx="16" cy="9" r="2" fill="${color}"/></svg>`,
@@ -30,11 +31,12 @@ function getPatternSVGString(pattern: WashiRoll["pattern"], color: string): stri
     music: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><ellipse cx="8" cy="16" rx="3" ry="2.5" fill="${color}" transform="rotate(-20 8 16)"/><line x1="11" y1="15" x2="11" y2="6" stroke="${color}" strokeWidth="1.5"/><path d="M11 6 Q15 5 15 9" stroke="${color}" strokeWidth="1.5" fill="none"/></svg>`,
     stars: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="${color}"/></svg>`,
   }
-  return patterns[pattern] || patterns.stars
+  return patterns[pattern] || patterns.mint
 }
 
 function getPatternSize(pattern: WashiRoll["pattern"]): string {
   const sizes: Record<WashiRoll["pattern"], string> = {
+    mint: "18px 18px",
     pokeballs: "20px 20px",
     cats: "24px 24px",
     dogs: "22px 22px",
@@ -46,7 +48,7 @@ function getPatternSize(pattern: WashiRoll["pattern"]): string {
     music: "24px 24px",
     stars: "20px 20px",
   }
-  return sizes[pattern] || "20px 20px"
+  return sizes[pattern] || "18px 18px"
 }
 
 // Generate CSS background-image for the pattern

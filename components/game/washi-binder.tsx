@@ -17,166 +17,164 @@ interface WashiBinderProps {
 
 type TabType = "rolls" | "achievements"
 
-function PatternSVG({ pattern, color }: { pattern: WashiRoll["pattern"]; color: string }) {
+function PatternIcon({ pattern, color, size }: { pattern: WashiRoll["pattern"]; color: string; size: number }) {
+  const s = size
+  const half = s / 2
+
   const patterns: Record<string, React.ReactNode> = {
+    // Mint leaves - small leaf shapes
+    mint: (
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="8" cy="8" rx="3" ry="5" fill={color} transform="rotate(-15 8 8)" />
+        <line x1="8" y1="4" x2="8" y2="13" stroke="white" strokeWidth="0.8" opacity="0.4" />
+      </svg>
+    ),
     // Pokeball silhouettes
     pokeballs: (
-      <pattern id="pokeballs" patternUnits="userSpaceOnUse" width="20" height="20">
-        <circle cx="10" cy="10" r="7" fill="none" stroke={color} strokeWidth="1.5" />
-        <line x1="3" y1="10" x2="17" y2="10" stroke={color} strokeWidth="1.5" />
-        <circle cx="10" cy="10" r="2.5" fill={color} />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="5" fill="none" stroke={color} strokeWidth="1.5" />
+        <line x1="3" y1="8" x2="13" y2="8" stroke={color} strokeWidth="1.5" />
+        <circle cx="8" cy="8" r="2" fill={color} />
+      </svg>
     ),
     // Cat faces
     cats: (
-      <pattern id="cats" patternUnits="userSpaceOnUse" width="24" height="24">
-        <circle cx="12" cy="14" r="6" fill={color} />
-        <polygon points="6,8 8,14 4,14" fill={color} />
-        <polygon points="18,8 16,14 20,14" fill={color} />
-        <circle cx="10" cy="13" r="1" fill="white" />
-        <circle cx="14" cy="13" r="1" fill="white" />
-        <ellipse cx="12" cy="15.5" rx="1" ry="0.7" fill="white" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <circle cx="8" cy="9" r="4" fill={color} />
+        <polygon points="4,5 5.5,9 3,9" fill={color} />
+        <polygon points="12,5 10.5,9 13,9" fill={color} />
+        <circle cx="6.5" cy="8.5" r="0.8" fill="white" />
+        <circle cx="9.5" cy="8.5" r="0.8" fill="white" />
+      </svg>
     ),
     // Dog paw prints
     dogs: (
-      <pattern id="dogs" patternUnits="userSpaceOnUse" width="22" height="22">
-        <ellipse cx="11" cy="14" rx="4" ry="3.5" fill={color} />
-        <circle cx="6" cy="9" r="2" fill={color} />
-        <circle cx="11" cy="7" r="2" fill={color} />
-        <circle cx="16" cy="9" r="2" fill={color} />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="8" cy="10" rx="3" ry="2.5" fill={color} />
+        <circle cx="5" cy="6" r="1.5" fill={color} />
+        <circle cx="8" cy="5" r="1.5" fill={color} />
+        <circle cx="11" cy="6" r="1.5" fill={color} />
+      </svg>
     ),
     // Frog faces
     frogs: (
-      <pattern id="frogs" patternUnits="userSpaceOnUse" width="24" height="20">
-        <ellipse cx="12" cy="12" rx="8" ry="6" fill={color} />
-        <circle cx="7" cy="7" r="3" fill={color} />
-        <circle cx="17" cy="7" r="3" fill={color} />
-        <circle cx="7" cy="7" r="1.5" fill="white" />
-        <circle cx="17" cy="7" r="1.5" fill="white" />
-        <ellipse cx="12" cy="13" rx="2" ry="1" fill="white" opacity="0.6" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="8" cy="9" rx="5" ry="4" fill={color} />
+        <circle cx="5" cy="5" r="2.5" fill={color} />
+        <circle cx="11" cy="5" r="2.5" fill={color} />
+        <circle cx="5" cy="5" r="1" fill="white" />
+        <circle cx="11" cy="5" r="1" fill="white" />
+      </svg>
     ),
     // Simple flowers
     flowers: (
-      <pattern id="flowers" patternUnits="userSpaceOnUse" width="20" height="20">
-        <circle cx="10" cy="7" r="3" fill={color} />
-        <circle cx="7" cy="10" r="3" fill={color} />
-        <circle cx="13" cy="10" r="3" fill={color} />
-        <circle cx="10" cy="13" r="3" fill={color} />
-        <circle cx="10" cy="10" r="2" fill="white" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <circle cx="8" cy="5" r="2.5" fill={color} />
+        <circle cx="5" cy="8" r="2.5" fill={color} />
+        <circle cx="11" cy="8" r="2.5" fill={color} />
+        <circle cx="8" cy="11" r="2.5" fill={color} />
+        <circle cx="8" cy="8" r="1.5" fill="white" />
+      </svg>
     ),
     // Snowflakes
     snowflakes: (
-      <pattern id="snowflakes" patternUnits="userSpaceOnUse" width="24" height="24">
-        <line x1="12" y1="4" x2="12" y2="20" stroke={color} strokeWidth="1.5" />
-        <line x1="4" y1="12" x2="20" y2="12" stroke={color} strokeWidth="1.5" />
-        <line x1="6" y1="6" x2="18" y2="18" stroke={color} strokeWidth="1.5" />
-        <line x1="18" y1="6" x2="6" y2="18" stroke={color} strokeWidth="1.5" />
-        <circle cx="12" cy="12" r="2" fill={color} />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <line x1="8" y1="2" x2="8" y2="14" stroke={color} strokeWidth="1.5" />
+        <line x1="2" y1="8" x2="14" y2="8" stroke={color} strokeWidth="1.5" />
+        <line x1="4" y1="4" x2="12" y2="12" stroke={color} strokeWidth="1" />
+        <line x1="12" y1="4" x2="4" y2="12" stroke={color} strokeWidth="1" />
+      </svg>
     ),
     // Cute bees
     bees: (
-      <pattern id="bees" patternUnits="userSpaceOnUse" width="22" height="22">
-        <ellipse cx="11" cy="12" rx="5" ry="4" fill={color} />
-        <line x1="8" y1="11" x2="14" y2="11" stroke="white" strokeWidth="1.5" />
-        <line x1="8" y1="13" x2="14" y2="13" stroke="white" strokeWidth="1.5" />
-        <circle cx="8" cy="9" r="2" fill={color} opacity="0.5" />
-        <circle cx="14" cy="9" r="2" fill={color} opacity="0.5" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="8" cy="9" rx="4" ry="3" fill={color} />
+        <line x1="5.5" y1="8" x2="10.5" y2="8" stroke="white" strokeWidth="1.2" />
+        <line x1="5.5" y1="10" x2="10.5" y2="10" stroke="white" strokeWidth="1.2" />
+        <circle cx="6" cy="6" r="1.5" fill={color} opacity="0.6" />
+        <circle cx="10" cy="6" r="1.5" fill={color} opacity="0.6" />
+      </svg>
     ),
     // Autumn leaves
     leaves: (
-      <pattern id="leaves" patternUnits="userSpaceOnUse" width="20" height="20">
-        <ellipse cx="10" cy="10" rx="4" ry="6" fill={color} transform="rotate(30 10 10)" />
-        <line x1="10" y1="5" x2="10" y2="16" stroke="white" strokeWidth="1" opacity="0.5" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="8" cy="8" rx="3" ry="5" fill={color} transform="rotate(25 8 8)" />
+        <line x1="8" y1="4" x2="8" y2="13" stroke="white" strokeWidth="0.8" opacity="0.4" />
+      </svg>
     ),
     // Music notes
     music: (
-      <pattern id="music" patternUnits="userSpaceOnUse" width="24" height="24">
-        <ellipse cx="8" cy="16" rx="3" ry="2.5" fill={color} transform="rotate(-20 8 16)" />
-        <line x1="11" y1="15" x2="11" y2="6" stroke={color} strokeWidth="1.5" />
-        <path d="M11 6 Q15 5 15 9" stroke={color} strokeWidth="1.5" fill="none" />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <ellipse cx="6" cy="11" rx="2.5" ry="2" fill={color} transform="rotate(-15 6 11)" />
+        <line x1="8.5" y1="10" x2="8.5" y2="3" stroke={color} strokeWidth="1.5" />
+        <path d="M8.5 3 Q12 2 12 5" stroke={color} strokeWidth="1.5" fill="none" />
+      </svg>
     ),
     // Stars
     stars: (
-      <pattern id="stars" patternUnits="userSpaceOnUse" width="20" height="20">
-        <polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill={color} />
-      </pattern>
+      <svg width={s} height={s} viewBox="0 0 16 16">
+        <polygon points="8,1 9.5,6 14,6 10.5,9 12,14 8,11 4,14 5.5,9 2,6 6.5,6" fill={color} />
+      </svg>
     ),
   }
 
-  return (
-    <svg width="0" height="0">
-      <defs>{patterns[pattern]}</defs>
-    </svg>
-  )
+  return patterns[pattern] || patterns.mint
 }
 
 function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm" | "md" | "lg" }) {
   const sizeClasses = {
-    sm: "h-8 w-20",
-    md: "h-12 w-28",
-    lg: "h-16 w-36",
+    sm: "h-10 w-24",
+    md: "h-12 w-32",
+    lg: "h-14 w-40",
   }
+
+  const patternSize = size === "sm" ? 14 : size === "md" ? 16 : 18
+  const offsetAmount = patternSize / 2
 
   return (
     <div
-      className={cn("rounded-md relative overflow-hidden", sizeClasses[size])}
+      className={cn("relative overflow-hidden rounded-sm", sizeClasses[size])}
       style={{ backgroundColor: roll.colors.primary }}
     >
-      <PatternSVG pattern={roll.pattern} color={roll.colors.secondary} />
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(getPatternSVGString(roll.pattern, roll.colors.secondary))}")`,
-          backgroundSize: getPatternSize(roll.pattern),
-        }}
-      />
-      {/* Tape sheen */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
-      {/* Torn edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-black/[0.08]" />
-      <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-black/[0.08]" />
+      {/* Torn left edge */}
+      <svg className="absolute left-0 top-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
+        <path
+          d="M8 0 L8 100 L6 98 L4 100 L2 97 L0 100 L2 95 L0 92 L3 88 L0 85 L2 80 L0 75 L3 72 L0 68 L2 65 L0 60 L3 55 L0 50 L2 45 L0 40 L3 35 L0 30 L2 25 L0 20 L3 15 L0 10 L2 5 L0 0 Z"
+          fill={roll.colors.primary}
+        />
+      </svg>
+
+      {/* Torn right edge */}
+      <svg className="absolute right-0 top-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
+        <path
+          d="M0 0 L0 100 L2 98 L4 100 L6 97 L8 100 L6 95 L8 92 L5 88 L8 85 L6 80 L8 75 L5 72 L8 68 L6 65 L8 60 L5 55 L8 50 L6 45 L8 40 L5 35 L8 30 L6 25 L8 20 L5 15 L8 10 L6 5 L8 0 Z"
+          fill={roll.colors.primary}
+        />
+      </svg>
+
+      {/* Pattern with offset rows */}
+      <div className="absolute inset-0 flex flex-col justify-center">
+        {[0, 1, 2].map((row) => (
+          <div
+            key={row}
+            className="flex items-center gap-1"
+            style={{
+              marginLeft: row % 2 === 1 ? offsetAmount : 0,
+              marginTop: row === 0 ? 0 : -2,
+            }}
+          >
+            {[...Array(8)].map((_, col) => (
+              <PatternIcon key={col} pattern={roll.pattern} color={roll.colors.secondary} size={patternSize} />
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Tape sheen - glossy effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
     </div>
   )
-}
-
-function getPatternSVGString(pattern: WashiRoll["pattern"], color: string): string {
-  const patterns: Record<string, string> = {
-    pokeballs: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="7" fill="none" stroke="${color}" strokeWidth="1.5"/><line x1="3" y1="10" x2="17" y2="10" stroke="${color}" strokeWidth="1.5"/><circle cx="10" cy="10" r="2.5" fill="${color}"/></svg>`,
-    cats: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="14" r="6" fill="${color}"/><polygon points="6,8 8,14 4,14" fill="${color}"/><polygon points="18,8 16,14 20,14" fill="${color}"/><circle cx="10" cy="13" r="1" fill="white"/><circle cx="14" cy="13" r="1" fill="white"/><ellipse cx="12" cy="15.5" rx="1" ry="0.7" fill="white"/></svg>`,
-    dogs: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><ellipse cx="11" cy="14" rx="4" ry="3.5" fill="${color}"/><circle cx="6" cy="9" r="2" fill="${color}"/><circle cx="11" cy="7" r="2" fill="${color}"/><circle cx="16" cy="9" r="2" fill="${color}"/></svg>`,
-    frogs: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="20"><ellipse cx="12" cy="12" rx="8" ry="6" fill="${color}"/><circle cx="7" cy="7" r="3" fill="${color}"/><circle cx="17" cy="7" r="3" fill="${color}"/><circle cx="7" cy="7" r="1.5" fill="white"/><circle cx="17" cy="7" r="1.5" fill="white"/><ellipse cx="12" cy="13" rx="2" ry="1" fill="white" opacity="0.6"/></svg>`,
-    flowers: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="7" r="3" fill="${color}"/><circle cx="7" cy="10" r="3" fill="${color}"/><circle cx="13" cy="10" r="3" fill="${color}"/><circle cx="10" cy="13" r="3" fill="${color}"/><circle cx="10" cy="10" r="2" fill="white"/></svg>`,
-    snowflakes: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><line x1="12" y1="4" x2="12" y2="20" stroke="${color}" strokeWidth="1.5"/><line x1="4" y1="12" x2="20" y2="12" stroke="${color}" strokeWidth="1.5"/><line x1="6" y1="6" x2="18" y2="18" stroke="${color}" strokeWidth="1.5"/><line x1="18" y1="6" x2="6" y2="18" stroke="${color}" strokeWidth="1.5"/><circle cx="12" cy="12" r="2" fill="${color}"/></svg>`,
-    bees: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><ellipse cx="11" cy="12" rx="5" ry="4" fill="${color}"/><line x1="8" y1="11" x2="14" y2="11" stroke="white" strokeWidth="1.5"/><line x1="8" y1="13" x2="14" y2="13" stroke="white" strokeWidth="1.5"/><circle cx="8" cy="9" r="2" fill="${color}" opacity="0.5"/><circle cx="14" cy="9" r="2" fill="${color}" opacity="0.5"/></svg>`,
-    leaves: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><ellipse cx="10" cy="10" rx="4" ry="6" fill="${color}" transform="rotate(30 10 10)"/><line x1="10" y1="5" x2="10" y2="16" stroke="white" strokeWidth="1" opacity="0.5"/></svg>`,
-    music: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><ellipse cx="8" cy="16" rx="3" ry="2.5" fill="${color}" transform="rotate(-20 8 16)"/><line x1="11" y1="15" x2="11" y2="6" stroke="${color}" strokeWidth="1.5"/><path d="M11 6 Q15 5 15 9" stroke="${color}" strokeWidth="1.5" fill="none"/></svg>`,
-    stars: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="${color}"/></svg>`,
-  }
-  return patterns[pattern] || patterns.stars
-}
-
-function getPatternSize(pattern: WashiRoll["pattern"]): string {
-  const sizes: Record<string, string> = {
-    pokeballs: "20px 20px",
-    cats: "24px 24px",
-    dogs: "22px 22px",
-    frogs: "24px 20px",
-    flowers: "20px 20px",
-    snowflakes: "24px 24px",
-    bees: "22px 22px",
-    leaves: "20px 20px",
-    music: "24px 24px",
-    stars: "20px 20px",
-  }
-  return sizes[pattern] || "20px 20px"
 }
 
 export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
@@ -296,7 +294,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
   return (
     <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
       {WASHI_ROLLS.map((roll) => {
-        const isUnlocked = unlockedRolls.includes(roll.id)
+        const isUnlocked = roll.id === "starter-mint" || unlockedRolls.includes(roll.id)
         const isSelected = selectedRoll === roll.id
         const progress = getAchievementProgress(roll.unlockRequirement)
 
@@ -307,7 +305,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
             disabled={!isUnlocked}
             whileTap={isUnlocked ? { scale: 0.98 } : undefined}
             className={cn(
-              "relative p-4 rounded-xl border-2 text-left transition-all",
+              "relative p-3 rounded-xl border-2 text-left transition-all",
               isUnlocked
                 ? isSelected
                   ? "border-foreground/30 bg-pastel-mint/20 shadow-md"
@@ -316,13 +314,13 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
             )}
           >
             {/* Selected indicator */}
-            {isSelected && (
+            {isSelected && isUnlocked && (
               <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-pastel-mint flex items-center justify-center">
                 <Check className="w-4 h-4 text-foreground" />
               </div>
             )}
 
-            {/* Lock indicator */}
+            {/* Lock indicator - only show if NOT unlocked */}
             {!isUnlocked && (
               <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-muted flex items-center justify-center">
                 <Lock className="w-3.5 h-3.5 text-muted-foreground" />
@@ -330,7 +328,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
             )}
 
             <div className="flex items-start gap-3">
-              {/* Tape preview */}
+              {/* Tape preview - only grayscale when locked */}
               <div className={cn(!isUnlocked && "grayscale opacity-50")}>
                 <TapePatternPreview roll={roll} size="md" />
               </div>
@@ -339,11 +337,10 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
                 <h3 className={cn("font-bold text-sm", !isUnlocked && "text-muted-foreground")}>
                   {isDE ? roll.nameDE : roll.name}
                 </h3>
-                <p className="text-xs text-muted-foreground capitalize">{roll.pattern}</p>
 
-                {/* Unlock requirement / progress */}
+                {/* Only show unlock requirement for locked rolls */}
                 {!isUnlocked && (
-                  <div className="mt-2">
+                  <div className="mt-1.5">
                     <p className="text-xs text-muted-foreground mb-1">
                       {isDE ? roll.unlockRequirement.descriptionDE : roll.unlockRequirement.description}
                     </p>
@@ -357,6 +354,14 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
                       {progress.current} / {progress.target}
                     </p>
                   </div>
+                )}
+
+                {/* Show "Equipped" or "Tap to equip" for unlocked rolls */}
+                {isUnlocked && !isSelected && (
+                  <p className="text-xs text-muted-foreground mt-1">{isDE ? "Tippen zum Auswählen" : "Tap to equip"}</p>
+                )}
+                {isUnlocked && isSelected && (
+                  <p className="text-xs text-pastel-mint font-medium mt-1">{isDE ? "Ausgerüstet" : "Equipped"}</p>
                 )}
               </div>
             </div>

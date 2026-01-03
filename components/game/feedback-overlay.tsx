@@ -137,7 +137,7 @@ export function TimerRing({ duration = 60 }: { duration?: number }) {
   const isTimerCritical = timeLeft <= 5
 
   return (
-    <div className="relative w-16 h-16">
+    <div className="relative w-12 h-12">
       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
         <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
         <motion.circle
@@ -160,7 +160,7 @@ export function TimerRing({ duration = 60 }: { duration?: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={cn("font-mono font-bold text-lg", isTimerCritical && "text-destructive animate-pulse")}>
+        <span className={cn("font-mono font-bold text-base", isTimerCritical && "text-destructive animate-pulse")}>
           {timeLeft}
         </span>
       </div>

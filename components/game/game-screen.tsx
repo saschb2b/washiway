@@ -90,32 +90,22 @@ function GameScreenContent() {
       <div className="flex-1 flex flex-col relative overflow-hidden min-h-dvh">
         <DecoWashiStrips />
 
-        <div className="mx-4 mt-4 relative">
+        <div className="mx-3 mt-3 relative">
           <div
-            className="absolute -top-2 left-6 w-16 h-5 rounded-sm transform -rotate-2 z-20"
+            className="absolute -top-1.5 left-4 w-12 h-3 rounded-sm transform -rotate-2 z-20"
             style={{
               backgroundColor: "var(--theme-primary)",
               backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.5) 4px, rgba(255,255,255,0.5) 6px)`,
             }}
           />
-          <div className="p-4 bg-card rounded-xl border border-border shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-between relative z-10">
-            {/* Subtle ruled lines */}
-            <div
-              className="absolute inset-x-4 top-4 bottom-4 pointer-events-none opacity-10"
-              style={{
-                backgroundImage: `repeating-linear-gradient(
-                  transparent, transparent 18px,
-                  var(--border) 18px, var(--border) 19px
-                )`,
-              }}
-            />
+          <div className="py-2 px-3 bg-card rounded-xl border border-border shadow-[0_2px_8px_rgba(0,0,0,0.05)] flex items-center justify-between relative z-10">
             <TimerRing duration={GAME_DURATION} />
             <div className="text-right relative z-10">
               <motion.p
                 key={score}
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
-                className="text-3xl font-bold font-mono text-foreground"
+                className="text-2xl font-bold font-mono text-foreground"
               >
                 {score.toLocaleString()}
               </motion.p>
@@ -123,14 +113,13 @@ function GameScreenContent() {
             </div>
           </div>
         </div>
-
         {/* Burst indicator */}
-        <div className="flex justify-center mt-3">
+        <div className="flex justify-center mt-2">
           <BurstIndicator />
         </div>
 
         {/* Question Display */}
-        <FeedbackOverlay className="flex-1 flex items-center justify-center p-6">
+        <FeedbackOverlay className="flex-1 flex items-center justify-center p-4">
           <ModeQuestionDisplay />
         </FeedbackOverlay>
 
@@ -141,7 +130,7 @@ function GameScreenContent() {
               background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
             }}
           />
-          <div className="p-6 pb-10 relative z-10">
+          <div className="p-4 pb-8 relative z-10">
             <ModeInput />
           </div>
         </div>
