@@ -69,6 +69,33 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
     setIsNegative(isNegativeRef.current)
   }, [disabled])
 
+  useEffect(() => {
+    if (disabled) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return
+
+      // Number keys 0-9
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault()
+        handleDigit(e.key)
+      }
+      // Backspace or Delete for delete
+      else if (e.key === "Backspace" || e.key === "Delete") {
+        e.preventDefault()
+        handleDelete()
+      }
+      // Minus, plus, or equal for negative toggle
+      else if (e.key === "-" || e.key === "+" || e.key === "=") {
+        e.preventDefault()
+        handleNegativeToggle()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [disabled, handleDigit, handleDelete, handleNegativeToggle])
+
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "del", "0", "neg"]
   const displayValue = input === "" ? "" : (isNegative ? "-" : "") + input
 
@@ -132,10 +159,11 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
             {digit !== "del" && digit !== "neg" && (
               <div className="absolute top-1 right-2 w-4 h-1 bg-white/30 rounded-full transform -rotate-12" />
             )}
-            <span className="relative z-10">{digit === "del" ? "←" : digit === "neg" ? "±" : digit}</span>
+            <span className="relative z-10">{digit === "del" ? "⌫" : digit === "neg" ? "±" : digit}</span>
           </motion.button>
         ))}
       </div>
+      <p className="text-center text-xs text-muted-foreground">Use keyboard: 0-9, Backspace, +/-</p>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n-context"
@@ -15,6 +15,25 @@ interface CompareButtonsProps {
 export function CompareButtons({ onAnswer, disabled }: CompareButtonsProps) {
   const { t } = useI18n()
 
+  useEffect(() => {
+    if (disabled) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return
+
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        e.preventDefault()
+        onAnswer("left")
+      } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        e.preventDefault()
+        onAnswer("right")
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [onAnswer, disabled])
+
   return (
     <div className="flex gap-4">
       <WashiTapeButton
@@ -22,6 +41,7 @@ export function CompareButtons({ onAnswer, disabled }: CompareButtonsProps) {
         pattern="stripes"
         disabled={disabled}
         onClick={() => onAnswer("left")}
+        hint="A"
       >
         <ChevronLeft className="w-6 h-6" />
         <span>{t.inputs.left}</span>
@@ -32,6 +52,7 @@ export function CompareButtons({ onAnswer, disabled }: CompareButtonsProps) {
         pattern="dots"
         disabled={disabled}
         onClick={() => onAnswer("right")}
+        hint="D"
       >
         <span>{t.inputs.right}</span>
         <ChevronRight className="w-6 h-6" />
@@ -46,9 +67,10 @@ interface WashiTapeButtonProps {
   pattern?: "dots" | "stripes" | "solid"
   disabled?: boolean
   onClick?: () => void
+  hint?: string
 }
 
-function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, onClick }: WashiTapeButtonProps) {
+function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, onClick, hint }: WashiTapeButtonProps) {
   const patternStyle = {
     dots: `radial-gradient(circle, rgba(255,255,255,0.5) 1.5px, transparent 1.5px)`,
     stripes: `repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(255,255,255,0.4) 6px, rgba(255,255,255,0.4) 12px)`,
@@ -84,6 +106,11 @@ function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, on
       {/* Shine notch */}
       <div className="absolute top-3 right-4 w-8 h-2 bg-white/40 rounded-full transform -rotate-12" />
       <span className="relative z-10 flex items-center gap-2">{children}</span>
+      {hint && (
+        <span className="absolute bottom-2 right-2 text-xs font-mono bg-black/10 px-1.5 py-0.5 rounded text-foreground/50">
+          {hint}
+        </span>
+      )}
     </motion.button>
   )
 }
