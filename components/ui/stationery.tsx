@@ -348,15 +348,14 @@ export function WashiwayLogo({ size = "md", className }: WashiwayLogoProps) {
   return (
     <div className={cn("relative inline-block", className)}>
       <h1 className={cn("font-extrabold tracking-tight text-foreground", sizeClasses[size])}>
-        Washi<span className="text-pastel-mint">way</span>
+        Washi<span style={{ color: "var(--theme-primary)" }}>way</span>
       </h1>
       {/* Signature washi tape underline */}
       <div
-        className={cn(
-          "absolute -bottom-1 left-0 h-2 rounded-sm transform -rotate-1",
-          "bg-gradient-to-r from-pastel-pink via-pastel-mint to-pastel-blue",
-          tapeWidth[size],
-        )}
+        className={cn("absolute -bottom-1 left-0 h-2 rounded-sm transform -rotate-1", tapeWidth[size])}
+        style={{
+          background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
+        }}
       >
         {/* Tape texture */}
         <div

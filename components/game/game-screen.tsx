@@ -30,35 +30,46 @@ function DecoWashiStrips() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Top left diagonal tape */}
       <div
-        className="absolute -top-4 -left-12 w-40 h-5 bg-pastel-mint/40 rounded-sm transform -rotate-[35deg]"
+        className="absolute -top-4 -left-12 w-40 h-5 rounded-sm transform -rotate-[35deg]"
         style={{
+          backgroundColor: "var(--theme-primary)",
+          opacity: 0.4,
           backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(255,255,255,0.5) 6px, rgba(255,255,255,0.5) 8px)`,
         }}
       />
       {/* Top right small tape */}
       <div
-        className="absolute top-20 -right-8 w-28 h-4 bg-pastel-pink/30 rounded-sm transform rotate-[25deg]"
+        className="absolute top-20 -right-8 w-28 h-4 rounded-sm transform rotate-[25deg]"
         style={{
+          backgroundColor: "var(--theme-secondary)",
+          opacity: 0.3,
           backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px)`,
           backgroundSize: "6px 6px",
         }}
       />
       {/* Bottom left tape */}
       <div
-        className="absolute bottom-32 -left-10 w-36 h-4 bg-pastel-blue/30 rounded-sm transform -rotate-[20deg]"
+        className="absolute bottom-32 -left-10 w-36 h-4 rounded-sm transform -rotate-[20deg]"
         style={{
+          backgroundColor: "var(--theme-highlight)",
+          opacity: 0.3,
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.4) 4px, rgba(255,255,255,0.4) 8px)`,
         }}
       />
       {/* Bottom right diagonal tape */}
       <div
-        className="absolute -bottom-2 -right-16 w-44 h-5 bg-pastel-peach/35 rounded-sm transform rotate-[30deg]"
+        className="absolute -bottom-2 -right-16 w-44 h-5 rounded-sm transform rotate-[30deg]"
         style={{
+          backgroundColor: "var(--theme-muted)",
+          opacity: 0.35,
           backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.4) 8px, rgba(255,255,255,0.4) 10px)`,
         }}
       />
       {/* Middle accent tape */}
-      <div className="absolute top-1/2 -left-6 w-20 h-3 bg-pastel-lavender/25 rounded-sm transform -rotate-[15deg]" />
+      <div
+        className="absolute top-1/2 -left-6 w-20 h-3 rounded-sm transform -rotate-[15deg]"
+        style={{ backgroundColor: "var(--theme-secondary)", opacity: 0.25 }}
+      />
     </div>
   )
 }
@@ -74,25 +85,16 @@ function GameScreenContent() {
     }
   }, [])
 
-  const modeColors: Record<GameMode, string> = {
-    truth: "bg-pastel-blue",
-    compare: "bg-pastel-peach",
-    digit: "bg-pastel-mint",
-    missing: "bg-pastel-pink",
-    combo: "bg-pastel-lavender",
-    match: "bg-pastel-yellow",
-  }
-
   return (
     <PaperBackground>
       <div className="flex-1 flex flex-col relative overflow-hidden min-h-dvh">
         <DecoWashiStrips />
 
         <div className="mx-4 mt-4 relative">
-          {/* Washi tape accent on top of card */}
           <div
-            className={`absolute -top-2 left-6 w-16 h-5 ${modeColors[mode]} rounded-sm transform -rotate-2 z-20`}
+            className="absolute -top-2 left-6 w-16 h-5 rounded-sm transform -rotate-2 z-20"
             style={{
+              backgroundColor: "var(--theme-primary)",
               backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.5) 4px, rgba(255,255,255,0.5) 6px)`,
             }}
           />
@@ -133,8 +135,12 @@ function GameScreenContent() {
         </FeedbackOverlay>
 
         <div className="relative">
-          {/* Washi tape divider above inputs */}
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-[6px] bg-gradient-to-r from-pastel-mint via-pastel-pink to-pastel-blue rounded-full opacity-60" />
+          <div
+            className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-[6px] rounded-full opacity-60"
+            style={{
+              background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
+            }}
+          />
           <div className="p-6 pb-10 relative z-10">
             <ModeInput />
           </div>
@@ -160,8 +166,10 @@ function ModeQuestionDisplay() {
       return (
         <div className="flex flex-col items-center gap-3">
           <div
-            className="px-5 py-2.5 bg-pastel-yellow/80 rounded-lg relative overflow-hidden"
+            className="px-5 py-2.5 rounded-lg relative overflow-hidden"
             style={{
+              backgroundColor: "var(--theme-highlight)",
+              opacity: 0.9,
               backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(255,255,255,0.4) 6px, rgba(255,255,255,0.4) 8px)`,
             }}
           >

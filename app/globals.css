@@ -53,6 +53,14 @@
 
   --radius: 1rem;
 
+  /* Theme colors from selected washi roll - defaults match "Lucky Stars" */
+  --theme-primary: #fcd34d;
+  --theme-secondary: #fbbf24;
+  --theme-highlight: #fef3c7;
+  --theme-muted: #fef9c3;
+  --theme-pattern: none;
+  --theme-pattern-size: 20px 20px;
+
   /* ... existing sidebar vars ... */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -130,6 +138,11 @@
   --color-highlight-pink: var(--highlight-pink);
   --color-highlight-blue: var(--highlight-blue);
   --color-highlight-green: var(--highlight-green);
+  /* Expose theme colors to Tailwind */
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-secondary: var(--theme-secondary);
+  --color-theme-highlight: var(--theme-highlight);
+  --color-theme-muted: var(--theme-muted);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

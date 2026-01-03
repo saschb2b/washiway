@@ -31,19 +31,19 @@ export interface Achievement {
 export const WASHI_ROLLS: WashiRoll[] = [
   {
     id: "starter-stars",
-    name: "Lucky Stars",
-    nameDE: "Glückssterne",
+    name: "Minty Fresh",
+    nameDE: "Frische Minze",
     pattern: "stars",
     colors: {
-      primary: "oklch(0.95 0.04 95)",
-      secondary: "oklch(0.75 0.12 85)",
-      highlight: "oklch(0.88 0.14 95)",
-      muted: "oklch(0.97 0.02 95)",
+      primary: "oklch(0.95 0.03 175)", // soft mint
+      secondary: "oklch(0.70 0.08 175)", // deeper mint
+      highlight: "oklch(0.90 0.06 175)", // mint highlight
+      muted: "oklch(0.97 0.015 175)", // barely tinted cream
     },
     unlockRequirement: {
       id: "starter",
-      name: "Getting Started",
-      nameDE: "Erster Start",
+      name: "First Steps",
+      nameDE: "Erste Schritte",
       description: "Play your first game",
       descriptionDE: "Spiele dein erstes Spiel",
       type: "gamesPlayed",

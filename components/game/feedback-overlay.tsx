@@ -72,8 +72,9 @@ export function BurstIndicator() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="px-5 py-2 rounded-lg bg-pastel-peach/70 relative overflow-hidden"
+          className="px-5 py-2 rounded-lg relative overflow-hidden"
           style={{
+            backgroundColor: "var(--theme-highlight)",
             backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.4) 4px, rgba(255,255,255,0.4) 8px)`,
           }}
         >
@@ -103,15 +104,23 @@ export function StreakDisplay() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: i * 0.02 }}
-            className={cn(
-              "w-2.5 h-2.5 rounded-sm",
-              streak >= 10 ? "bg-pastel-peach" : streak >= 5 ? "bg-pastel-mint" : "bg-pastel-blue",
-            )}
+            className="w-2.5 h-2.5 rounded-sm"
+            style={{
+              backgroundColor:
+                streak >= 10
+                  ? "var(--theme-highlight)"
+                  : streak >= 5
+                    ? "var(--theme-primary)"
+                    : "var(--theme-secondary)",
+            }}
           />
         ))}
       </div>
       {multiplier > 1 && (
-        <span className={cn("text-sm font-bold ml-1", streak >= 10 ? "text-pastel-peach" : "text-pastel-mint")}>
+        <span
+          className="text-sm font-bold ml-1"
+          style={{ color: streak >= 10 ? "var(--theme-highlight)" : "var(--theme-primary)" }}
+        >
           x{multiplier}
         </span>
       )}
@@ -136,9 +145,13 @@ export function TimerRing({ duration = 60 }: { duration?: number }) {
           cy="18"
           r="15.5"
           fill="none"
-          className={cn(
-            isTimerCritical ? "stroke-destructive" : isTimerLow ? "stroke-pastel-peach" : "stroke-pastel-blue",
-          )}
+          style={{
+            stroke: isTimerCritical
+              ? "var(--color-destructive)"
+              : isTimerLow
+                ? "var(--theme-highlight)"
+                : "var(--theme-primary)",
+          }}
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray="97.5"

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { cn } from "@/lib/utils"
 import type { GameMode, GameStats } from "@/lib/game-types"
 import { useSettings } from "@/lib/settings-context"
 import { useAudio } from "@/lib/audio-context"
@@ -93,10 +92,10 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
   }, [mode, difficulty, stats, updateBestScore, isNewBest, play, recordGameResult])
 
   const statItems = [
-    { label: t.results.bestStreak, value: stats.maxStreak, color: "text-pastel-peach" },
-    { label: t.results.accuracy, value: `${accuracy}%`, color: "text-pastel-mint" },
-    { label: t.results.correct, value: stats.correct, color: "text-pastel-blue" },
-    { label: t.results.avgTime, value: `${stats.avgTime}ms`, color: "text-pastel-pink" },
+    { label: t.results.bestStreak, value: stats.maxStreak, cssVar: "--theme-primary" },
+    { label: t.results.accuracy, value: `${accuracy}%`, cssVar: "--theme-secondary" },
+    { label: t.results.correct, value: stats.correct, cssVar: "--theme-highlight" },
+    { label: t.results.avgTime, value: `${stats.avgTime}ms`, cssVar: "--theme-muted" },
   ]
 
   return (
@@ -118,14 +117,9 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                 repeat: Number.POSITIVE_INFINITY,
                 delay: i * 0.2,
               }}
-              className={cn(
-                "absolute rounded-sm shadow-sm",
-                i % 4 === 0 && "bg-pastel-yellow",
-                i % 4 === 1 && "bg-pastel-pink",
-                i % 4 === 2 && "bg-pastel-mint",
-                i % 4 === 3 && "bg-pastel-blue",
-              )}
+              className="absolute rounded-sm shadow-sm"
               style={{
+                backgroundColor: `var(--theme-${i % 4 === 0 ? "primary" : i % 4 === 1 ? "secondary" : i % 4 === 2 ? "highlight" : "muted"})`,
                 width: 16 + (i % 3) * 10,
                 height: 16 + (i % 3) * 10,
                 left: `${8 + i * 15}%`,
@@ -141,7 +135,10 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
           animate={{ opacity: 1, y: 0 }}
           className="text-center z-10 relative"
         >
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-4 bg-pastel-mint/60 rounded-sm transform -rotate-2" />
+          <div
+            className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-4 rounded-sm transform -rotate-2"
+            style={{ backgroundColor: "var(--theme-primary)", opacity: 0.6 }}
+          />
           <LabelSticker className="mb-2">{t.results.gameOver}</LabelSticker>
           <h2 className="text-2xl font-bold text-foreground mt-2">{modeTranslation.name}</h2>
         </motion.div>
@@ -165,7 +162,10 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                   transition={{ delay: 0.4 }}
                   className="mt-3"
                 >
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-pastel-mint rounded-full text-sm font-bold">
+                  <span
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold"
+                    style={{ backgroundColor: "var(--theme-primary)" }}
+                  >
                     ★ {t.results.newBest}
                   </span>
                 </motion.div>
@@ -181,7 +181,10 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
           transition={{ delay: 0.35 }}
           className="z-10"
         >
-          <div className="flex items-center gap-2 px-4 py-2 bg-pastel-yellow/60 rounded-full shadow-sm">
+          <div
+            className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
+            style={{ backgroundColor: "var(--theme-highlight)", opacity: 0.9 }}
+          >
             <Sparkles className="w-4 h-4 text-amber-600" />
             <span className="font-bold text-foreground">+{swatchesEarned}</span>
             <span className="text-sm text-muted-foreground">{isDE ? "Swatches" : "swatches"}</span>
@@ -206,10 +209,12 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                   className="flex items-center gap-3"
                 >
                   <div className="w-5 h-5 rounded border-2 border-border bg-card flex items-center justify-center">
-                    <Check className="w-3 h-3 text-pastel-mint" />
+                    <Check className="w-3 h-3" style={{ color: "var(--theme-primary)" }} />
                   </div>
                   <span className="text-sm text-muted-foreground flex-1">{item.label}</span>
-                  <span className={cn("font-bold font-mono", item.color)}>{item.value}</span>
+                  <span className="font-bold font-mono" style={{ color: `var(${item.cssVar})` }}>
+                    {item.value}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -225,13 +230,8 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
             className="z-10"
           >
             <div
-              className={cn(
-                "px-6 py-3 rounded-xl",
-                "bg-pastel-peach",
-                "font-bold text-lg text-foreground",
-                "shadow-md border-2 border-white/30",
-                "animate-float",
-              )}
+              className="px-6 py-3 rounded-xl font-bold text-lg text-foreground shadow-md border-2 border-white/30 animate-float"
+              style={{ backgroundColor: "var(--theme-secondary)" }}
             >
               {stats.maxStreak} {t.results.streak}
             </div>
@@ -289,8 +289,11 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                 className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto bg-card rounded-2xl shadow-2xl z-50 overflow-hidden"
               >
                 <div className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-pastel-yellow flex items-center justify-center">
-                    <Gift className="w-8 h-8 text-amber-600" />
+                  <div
+                    className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "var(--theme-primary)" }}
+                  >
+                    <Gift className="w-8 h-8 text-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">
                     {isDE ? "Neue Rolle freigeschaltet!" : "New Roll Unlocked!"}

@@ -16,10 +16,20 @@ export function TruthButtons({ onAnswer, disabled }: TruthButtonsProps) {
 
   return (
     <div className="flex gap-4">
-      <WashiTapeButton color="mint" pattern="stripes" disabled={disabled} onClick={() => onAnswer(true)}>
+      <WashiTapeButton
+        themeColor="var(--theme-primary)"
+        pattern="stripes"
+        disabled={disabled}
+        onClick={() => onAnswer(true)}
+      >
         {t.inputs.true}
       </WashiTapeButton>
-      <WashiTapeButton color="pink" pattern="dots" disabled={disabled} onClick={() => onAnswer(false)}>
+      <WashiTapeButton
+        themeColor="var(--theme-highlight)"
+        pattern="dots"
+        disabled={disabled}
+        onClick={() => onAnswer(false)}
+      >
         {t.inputs.false}
       </WashiTapeButton>
     </div>
@@ -28,20 +38,13 @@ export function TruthButtons({ onAnswer, disabled }: TruthButtonsProps) {
 
 interface WashiTapeButtonProps {
   children: React.ReactNode
-  color: "mint" | "pink" | "blue" | "peach"
+  themeColor: string
   pattern?: "dots" | "stripes" | "solid"
   disabled?: boolean
   onClick?: () => void
 }
 
-const colorClasses = {
-  mint: "bg-pastel-mint",
-  pink: "bg-pastel-pink",
-  blue: "bg-pastel-blue",
-  peach: "bg-pastel-peach",
-}
-
-function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick }: WashiTapeButtonProps) {
+function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, onClick }: WashiTapeButtonProps) {
   const patternStyle = {
     dots: `radial-gradient(circle, rgba(255,255,255,0.5) 1.5px, transparent 1.5px)`,
     stripes: `repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(255,255,255,0.4) 6px, rgba(255,255,255,0.4) 12px)`,
@@ -55,7 +58,6 @@ function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick
       disabled={disabled}
       className={cn(
         "flex-1 py-7 rounded-xl text-2xl font-bold relative overflow-hidden",
-        colorClasses[color],
         "text-foreground",
         "shadow-[0_4px_0_rgba(0,0,0,0.08),0_6px_16px_rgba(0,0,0,0.1)]",
         "active:shadow-[0_2px_0_rgba(0,0,0,0.08),0_3px_8px_rgba(0,0,0,0.1)]",
@@ -63,6 +65,7 @@ function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick
         "disabled:opacity-50 disabled:pointer-events-none",
       )}
       style={{
+        backgroundColor: themeColor,
         backgroundImage: patternStyle[pattern],
         backgroundSize: pattern === "dots" ? "12px 12px" : undefined,
       }}

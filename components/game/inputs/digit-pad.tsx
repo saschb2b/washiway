@@ -78,12 +78,12 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
         <div
           className={cn(
             "inline-flex items-center justify-center min-w-[140px] min-h-[72px] px-8 rounded-xl relative overflow-hidden",
-            "bg-pastel-yellow/70",
             "font-mono text-5xl font-bold text-foreground",
             "transition-all duration-150",
             input ? "shadow-[0_4px_12px_rgba(0,0,0,0.1)]" : "shadow-[0_2px_8px_rgba(0,0,0,0.06)]",
           )}
           style={{
+            backgroundColor: "var(--theme-primary)",
             backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.4) 8px, rgba(255,255,255,0.4) 10px)`,
           }}
         >
@@ -109,20 +109,24 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
               "py-5 rounded-xl text-2xl font-bold relative overflow-hidden",
               "transition-all duration-100",
               "disabled:opacity-50 disabled:pointer-events-none",
-              digit === "neg"
-                ? cn(
-                    "bg-pastel-lavender/50 text-foreground",
-                    isNegative && "bg-pastel-peach text-foreground shadow-[0_3px_0_rgba(0,0,0,0.08)]",
-                  )
-                : digit === "del"
-                  ? "bg-pastel-pink/50 text-foreground"
-                  : cn(
+              digit === "del"
+                ? "bg-pastel-pink/50 text-foreground"
+                : digit !== "neg" &&
+                    cn(
                       "bg-card text-card-foreground",
                       "border border-border",
                       "shadow-[0_3px_0_rgba(0,0,0,0.06)]",
                       "active:shadow-[0_1px_0_rgba(0,0,0,0.06)]",
                     ),
             )}
+            style={
+              digit === "neg"
+                ? {
+                    backgroundColor: isNegative ? "var(--theme-highlight)" : "var(--theme-muted)",
+                    boxShadow: isNegative ? "0 3px 0 rgba(0,0,0,0.08)" : undefined,
+                  }
+                : undefined
+            }
           >
             {/* Subtle shine for number buttons */}
             {digit !== "del" && digit !== "neg" && (

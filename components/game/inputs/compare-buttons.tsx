@@ -17,12 +17,22 @@ export function CompareButtons({ onAnswer, disabled }: CompareButtonsProps) {
 
   return (
     <div className="flex gap-4">
-      <WashiTapeButton color="blue" pattern="stripes" disabled={disabled} onClick={() => onAnswer("left")}>
+      <WashiTapeButton
+        themeColor="var(--theme-primary)"
+        pattern="stripes"
+        disabled={disabled}
+        onClick={() => onAnswer("left")}
+      >
         <ChevronLeft className="w-6 h-6" />
         <span>{t.inputs.left}</span>
       </WashiTapeButton>
 
-      <WashiTapeButton color="peach" pattern="dots" disabled={disabled} onClick={() => onAnswer("right")}>
+      <WashiTapeButton
+        themeColor="var(--theme-highlight)"
+        pattern="dots"
+        disabled={disabled}
+        onClick={() => onAnswer("right")}
+      >
         <span>{t.inputs.right}</span>
         <ChevronRight className="w-6 h-6" />
       </WashiTapeButton>
@@ -32,20 +42,13 @@ export function CompareButtons({ onAnswer, disabled }: CompareButtonsProps) {
 
 interface WashiTapeButtonProps {
   children: React.ReactNode
-  color: "mint" | "pink" | "blue" | "peach"
+  themeColor: string
   pattern?: "dots" | "stripes" | "solid"
   disabled?: boolean
   onClick?: () => void
 }
 
-const colorClasses = {
-  mint: "bg-pastel-mint",
-  pink: "bg-pastel-pink",
-  blue: "bg-pastel-blue",
-  peach: "bg-pastel-peach",
-}
-
-function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick }: WashiTapeButtonProps) {
+function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, onClick }: WashiTapeButtonProps) {
   const patternStyle = {
     dots: `radial-gradient(circle, rgba(255,255,255,0.5) 1.5px, transparent 1.5px)`,
     stripes: `repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(255,255,255,0.4) 6px, rgba(255,255,255,0.4) 12px)`,
@@ -60,7 +63,6 @@ function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick
       className={cn(
         "flex-1 py-6 rounded-xl text-xl font-bold relative overflow-hidden",
         "flex items-center justify-center gap-2",
-        colorClasses[color],
         "text-foreground",
         "shadow-[0_4px_0_rgba(0,0,0,0.08),0_6px_16px_rgba(0,0,0,0.1)]",
         "active:shadow-[0_2px_0_rgba(0,0,0,0.08),0_3px_8px_rgba(0,0,0,0.1)]",
@@ -68,6 +70,7 @@ function WashiTapeButton({ children, color, pattern = "solid", disabled, onClick
         "disabled:opacity-50 disabled:pointer-events-none",
       )}
       style={{
+        backgroundColor: themeColor,
         backgroundImage: patternStyle[pattern],
         backgroundSize: pattern === "dots" ? "12px 12px" : undefined,
       }}

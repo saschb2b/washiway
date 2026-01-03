@@ -58,13 +58,13 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
           transition={{ delay: 0.3 }}
           className="absolute top-4 right-4 z-20 flex items-center gap-2"
         >
-          {/* Binder button */}
           <button
             onClick={() => {
               play("tap")
               setIsBinderOpen(true)
             }}
-            className="w-11 h-11 rounded-xl bg-pastel-peach border-2 border-black/[0.08] flex items-center justify-center hover:scale-105 transition-transform shadow-sm"
+            className="w-11 h-11 rounded-xl border-2 border-black/[0.08] flex items-center justify-center hover:scale-105 transition-transform shadow-sm"
+            style={{ backgroundColor: "var(--theme-highlight)" }}
           >
             <BookOpen className="w-5 h-5 text-foreground" />
           </button>
@@ -87,31 +87,42 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
-            className="absolute top-[5%] -left-12 w-40 h-4 bg-pastel-pink/50 transform -rotate-12 rounded-sm"
+            className="absolute top-[5%] -left-12 w-40 h-4 transform -rotate-12 rounded-sm"
             style={{
+              backgroundColor: "var(--theme-highlight)",
+              opacity: 0.5,
               backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 8px)`,
             }}
           />
           <div
-            className="absolute top-[20%] -right-8 w-32 h-3.5 bg-pastel-blue/50 transform rotate-6 rounded-sm"
+            className="absolute top-[20%] -right-8 w-32 h-3.5 transform rotate-6 rounded-sm"
             style={{
+              backgroundColor: "var(--theme-muted)",
+              opacity: 0.5,
               backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)`,
               backgroundSize: "8px 8px",
             }}
           />
           <div
-            className="absolute bottom-[18%] left-[3%] w-28 h-3 bg-pastel-mint/50 transform -rotate-2 rounded-sm"
+            className="absolute bottom-[18%] left-[3%] w-28 h-3 transform -rotate-2 rounded-sm"
             style={{
+              backgroundColor: "var(--theme-primary)",
+              opacity: 0.4,
               backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,0,0,0.03) 6px, rgba(0,0,0,0.03) 12px)`,
             }}
           />
           <div
-            className="absolute bottom-[7%] right-[5%] w-24 h-3 bg-pastel-peach/50 transform rotate-8 rounded-sm"
+            className="absolute bottom-[7%] right-[5%] w-24 h-3 transform rotate-8 rounded-sm"
             style={{
+              backgroundColor: "var(--theme-secondary)",
+              opacity: 0.4,
               backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 8px)`,
             }}
           />
-          <div className="absolute top-[45%] -left-6 w-20 h-2.5 bg-pastel-lavender/40 transform rotate-3 rounded-sm" />
+          <div
+            className="absolute top-[45%] -left-6 w-20 h-2.5 transform rotate-3 rounded-sm"
+            style={{ backgroundColor: "var(--theme-highlight)", opacity: 0.3 }}
+          />
         </div>
 
         <motion.div
@@ -132,8 +143,10 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
         >
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="flex-1 h-2 bg-pastel-mint/60 rounded-sm"
+              className="flex-1 h-2 rounded-sm"
               style={{
+                backgroundColor: "var(--theme-primary)",
+                opacity: 0.5,
                 backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 6px)`,
               }}
             />
@@ -141,8 +154,10 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
               {t.menu.chooseMode}
             </span>
             <div
-              className="flex-1 h-2 bg-pastel-mint/60 rounded-sm"
+              className="flex-1 h-2 rounded-sm"
               style={{
+                backgroundColor: "var(--theme-primary)",
+                opacity: 0.5,
                 backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 6px)`,
               }}
             />
@@ -182,19 +197,6 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
               </motion.div>
             )
           })}
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="z-10 mt-2">
-          <div
-            className="relative px-5 py-2.5 bg-pastel-yellow/70 rounded-md shadow-sm"
-            style={{
-              backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,0,0,0.03) 8px, rgba(0,0,0,0.03) 10px)`,
-            }}
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-black/[0.03] rounded-l" />
-            <div className="absolute right-0 top-0 bottom-0 w-1 bg-black/[0.03] rounded-r" />
-            <p className="text-sm font-medium text-foreground/80 text-center">{t.menu.streakHint}</p>
-          </div>
         </motion.div>
 
         <ModeConfigSheet
