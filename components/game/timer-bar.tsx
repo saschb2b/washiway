@@ -1,0 +1,41 @@
+"use client"
+
+import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
+
+interface TimerBarProps {
+  timeLeft: number
+  totalTime: number
+}
+
+export function TimerBar({ timeLeft, totalTime }: TimerBarProps) {
+  const percentage = (timeLeft / totalTime) * 100
+  const isLow = timeLeft <= 10
+  const isCritical = timeLeft <= 5
+
+  return (
+    <div className="w-full h-2 bg-muted">
+      <motion.div
+        initial={{ width: "100%" }}
+        animate={{ width: `${percentage}%` }}
+        transition={{ duration: 0.5, ease: "linear" }}
+        className={cn(
+          "h-full transition-colors duration-300",
+          isCritical && "bg-destructive",
+          isLow && !isCritical && "bg-accent",
+          !isLow && "bg-primary",
+        )}
+      />
+      {isCritical && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY }}
+          className="absolute left-1/2 -translate-x-1/2 top-4 text-destructive font-mono font-bold"
+        >
+          {timeLeft}
+        </motion.div>
+      )}
+    </div>
+  )
+}
