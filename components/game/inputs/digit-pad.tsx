@@ -1,33 +1,23 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 interface DigitPadProps {
   onAnswer: (answer: number) => void
   disabled?: boolean
   correctAnswer: number
-  questionId: string
 }
 
-export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: DigitPadProps) {
+// Rendered with key={question.id}, so every question starts from a fresh pad.
+export function DigitPad({ onAnswer, disabled, correctAnswer }: DigitPadProps) {
   const [input, setInput] = useState("")
   const [isNegative, setIsNegative] = useState(false)
 
   const inputRef = useRef("")
   const isNegativeRef = useRef(false)
   const hasSubmittedRef = useRef(false)
-  const lastQuestionIdRef = useRef(questionId)
-
-  if (questionId !== lastQuestionIdRef.current) {
-    lastQuestionIdRef.current = questionId
-    inputRef.current = ""
-    isNegativeRef.current = false
-    hasSubmittedRef.current = false
-    if (input !== "") setInput("")
-    if (isNegative !== false) setIsNegative(false)
-  }
 
   useEffect(() => {
     if (disabled) return
@@ -104,7 +94,7 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
       <div className="text-center">
         <div
           className={cn(
-            "inline-flex items-center justify-center min-w-[140px] min-h-[72px] px-8 rounded-xl relative overflow-hidden",
+            "relative inline-flex min-h-[72px] min-w-[140px] items-center justify-center overflow-hidden rounded-xl px-8",
             "font-mono text-5xl font-bold text-foreground",
             "transition-all duration-150",
             input ? "shadow-[0_4px_12px_rgba(0,0,0,0.1)]" : "shadow-[0_2px_8px_rgba(0,0,0,0.06)]",
@@ -115,13 +105,13 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
           }}
         >
           {/* Torn edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-r from-black/[0.06] to-transparent" />
-          <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-gradient-to-l from-black/[0.06] to-transparent" />
+          <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-r from-black/[0.06] to-transparent" />
+          <div className="absolute top-0 right-0 bottom-0 w-1.5 bg-gradient-to-l from-black/[0.06] to-transparent" />
           <span className="relative z-10">{displayValue || <span className="text-foreground/30">?</span>}</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 max-w-[280px] mx-auto">
+      <div className="mx-auto grid max-w-[280px] grid-cols-3 gap-3">
         {digits.map((digit) => (
           <motion.button
             key={digit}
@@ -133,9 +123,9 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
               else handleDigit(digit)
             }}
             className={cn(
-              "py-5 rounded-xl text-2xl font-bold relative overflow-hidden",
+              "relative overflow-hidden rounded-xl py-5 text-2xl font-bold",
               "transition-all duration-100",
-              "disabled:opacity-50 disabled:pointer-events-none",
+              "disabled:pointer-events-none disabled:opacity-50",
               digit === "del"
                 ? "bg-pastel-pink/50 text-foreground"
                 : digit !== "neg" &&
@@ -157,7 +147,7 @@ export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: Digi
           >
             {/* Subtle shine for number buttons */}
             {digit !== "del" && digit !== "neg" && (
-              <div className="absolute top-1 right-2 w-4 h-1 bg-white/30 rounded-full transform -rotate-12" />
+              <div className="absolute top-1 right-2 h-1 w-4 -rotate-12 transform rounded-full bg-white/30" />
             )}
             <span className="relative z-10">{digit === "del" ? "⌫" : digit === "neg" ? "±" : digit}</span>
           </motion.button>

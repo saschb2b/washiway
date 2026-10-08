@@ -64,7 +64,6 @@ export function GameProvider({ children, mode, onGameEnd, gameDuration = 60 }: G
   const [correct, setCorrect] = useState(0)
   const [incorrect, setIncorrect] = useState(0)
   const [timeLeft, setTimeLeft] = useState(gameDuration)
-  const [difficulty, setDifficulty] = useState(baseDifficulty)
   const [feedback, setFeedback] = useState<FeedbackState>({ type: null })
   const [transitionPhase, setTransitionPhase] = useState<TransitionPhase>("idle")
 
@@ -74,15 +73,18 @@ export function GameProvider({ children, mode, onGameEnd, gameDuration = 60 }: G
   const burstLength = 3
 
   const responseTimes = useRef<number[]>([])
-  const questionStartTime = useRef(Date.now())
+  const questionStartTime = useRef(0)
   const correctInRow = useRef(0)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const gameEnded = useRef(false)
   const pendingQuestion = useRef<Question | null>(null)
 
   const multiplier = streak >= 20 ? 4 : streak >= 10 ? 3 : streak >= 5 ? 2 : 1
+  // Every 5 in a row bumps the difficulty one level, capped at Expert.
+  const difficulty = Math.min(5, baseDifficulty + Math.floor(streak / 5))
 
   useEffect(() => {
+    questionStartTime.current = Date.now()
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -115,12 +117,6 @@ export function GameProvider({ children, mode, onGameEnd, gameDuration = 60 }: G
       })
     }
   }, [timeLeft, score, streak, maxStreak, correct, incorrect, onGameEnd, play])
-
-  useEffect(() => {
-    const streakBonus = Math.floor(streak / 5)
-    const newDifficulty = Math.min(5, baseDifficulty + streakBonus)
-    setDifficulty(newDifficulty)
-  }, [streak, baseDifficulty])
 
   const submitAnswer = useCallback(
     (answer: unknown) => {
@@ -205,7 +201,6 @@ export function GameProvider({ children, mode, onGameEnd, gameDuration = 60 }: G
       setCorrect(0)
       setIncorrect(0)
       setTimeLeft(gameDuration)
-      setDifficulty(baseDifficulty)
       setFeedback({ type: null })
       setIsBurstMode(false)
       setBurstCount(0)

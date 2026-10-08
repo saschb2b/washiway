@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { useI18n, type Language } from "@/lib/i18n-context"
 import { useAudio } from "@/lib/audio-context"
 import { cn } from "@/lib/utils"
@@ -15,7 +15,7 @@ export function LanguageToggle() {
   const { play } = useAudio()
 
   return (
-    <div className="flex rounded-full bg-card/80 border-2 border-border/50 overflow-hidden">
+    <div className="flex overflow-hidden rounded-full border-2 border-border/50 bg-card/80">
       {LANGUAGES.map((lang) => (
         <motion.button
           key={lang.code}

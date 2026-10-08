@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 interface TimerBarProps {
@@ -14,7 +14,7 @@ export function TimerBar({ timeLeft, totalTime }: TimerBarProps) {
   const isCritical = timeLeft <= 5
 
   return (
-    <div className="w-full h-2 bg-muted">
+    <div className="h-2 w-full bg-muted">
       <motion.div
         initial={{ width: "100%" }}
         animate={{ width: `${percentage}%` }}
@@ -31,7 +31,7 @@ export function TimerBar({ timeLeft, totalTime }: TimerBarProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 1, 0] }}
           transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY }}
-          className="absolute left-1/2 -translate-x-1/2 top-4 text-destructive font-mono font-bold"
+          className="absolute top-4 left-1/2 -translate-x-1/2 font-mono font-bold text-destructive"
         >
           {timeLeft}
         </motion.div>

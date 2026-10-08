@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 interface StickyNoteProps {
@@ -22,18 +22,18 @@ const stickyColors = {
 export function StickyNote({ children, color = "yellow", className, rotate = 0 }: StickyNoteProps) {
   return (
     <div
-      className={cn("relative p-4 rounded-sm", stickyColors[color], "shadow-[2px_3px_8px_rgba(0,0,0,0.1)]", className)}
+      className={cn("relative rounded-sm p-4", stickyColors[color], "shadow-[2px_3px_8px_rgba(0,0,0,0.1)]", className)}
       style={{ transform: `rotate(${rotate}deg)` }}
     >
       {/* Folded corner */}
       <div
-        className="absolute bottom-0 left-0 w-5 h-5 overflow-hidden"
+        className="absolute bottom-0 left-0 h-5 w-5 overflow-hidden"
         style={{
           background: `linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%)`,
         }}
       />
       {/* Subtle tape on top */}
-      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-4 bg-pastel-mint/60 rounded-sm" />
+      <div className="absolute -top-2 left-1/2 h-4 w-12 -translate-x-1/2 rounded-sm bg-pastel-mint/60" />
       {children}
     </div>
   )
@@ -49,14 +49,14 @@ export function IndexCard({ children, ruled = false, className }: IndexCardProps
   return (
     <div
       className={cn(
-        "relative bg-card border border-border rounded-lg p-4",
+        "relative rounded-lg border border-border bg-card p-4",
         "shadow-[0_2px_8px_rgba(0,0,0,0.06)]",
         className,
       )}
     >
       {ruled && (
         <div
-          className="absolute inset-x-4 top-8 bottom-4 pointer-events-none opacity-30"
+          className="pointer-events-none absolute inset-x-4 top-8 bottom-4 opacity-30"
           style={{
             backgroundImage: `repeating-linear-gradient(
               transparent, transparent 22px,
@@ -99,8 +99,8 @@ export function WashiTape({ color = "mint", className, pattern = "solid" }: Wash
       }}
     >
       {/* Torn edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-r from-transparent to-black/5" />
-      <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-l from-transparent to-black/5" />
+      <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-transparent to-black/5" />
+      <div className="absolute top-0 right-0 bottom-0 w-1 bg-gradient-to-l from-transparent to-black/5" />
     </div>
   )
 }
@@ -138,7 +138,7 @@ export function WashiTapeStrip({ children, color, pattern = "dots", className, o
       whileHover={{ x: 4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        "relative w-full text-left rounded-lg overflow-hidden",
+        "relative w-full overflow-hidden rounded-lg text-left",
         colorStyle.bg,
         "shadow-[0_2px_8px_rgba(0,0,0,0.06)]",
         "border border-black/[0.06]",
@@ -150,11 +150,11 @@ export function WashiTapeStrip({ children, color, pattern = "dots", className, o
       }}
     >
       {/* Left torn edge effect */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-r from-black/[0.04] to-transparent" />
+      <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-black/[0.04] to-transparent" />
       {/* Right torn edge effect */}
-      <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.04] to-transparent" />
+      <div className="absolute top-0 right-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.04] to-transparent" />
       {/* Top highlight for tape sheen */}
-      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+      <div className="absolute top-0 right-4 left-4 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
       {/* Content */}
       <div className="relative z-10">{children}</div>
     </motion.button>
@@ -199,20 +199,20 @@ export function StickerButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "relative font-bold rounded-xl",
+        "relative rounded-xl font-bold",
         stickerColors[color],
         "text-foreground",
         "border-2 border-black/8",
         "shadow-[0_4px_0_rgba(0,0,0,0.08),0_6px_12px_rgba(0,0,0,0.1)]",
         "active:shadow-[0_2px_0_rgba(0,0,0,0.08),0_3px_6px_rgba(0,0,0,0.1)]",
         "transition-shadow duration-100",
-        "disabled:opacity-50 disabled:pointer-events-none",
+        "disabled:pointer-events-none disabled:opacity-50",
         sizeClasses[size],
         className,
       )}
     >
       {/* Shine notch */}
-      <div className="absolute top-2 right-3 w-6 h-2 bg-white/40 rounded-full transform -rotate-12" />
+      <div className="absolute top-2 right-3 h-2 w-6 -rotate-12 transform rounded-full bg-white/40" />
       {children}
     </motion.button>
   )
@@ -235,7 +235,7 @@ export function LabelSticker({ children, color = "default", className }: LabelSt
   return (
     <span
       className={cn(
-        "inline-flex px-3 py-1 rounded text-xs font-semibold uppercase tracking-wide",
+        "inline-flex rounded px-3 py-1 text-xs font-semibold tracking-wide uppercase",
         "border-[1.5px]",
         "shadow-[1px_1px_2px_rgba(0,0,0,0.04)]",
         labelColors[color],
@@ -257,7 +257,7 @@ export function PaperBackground({ children, className }: PaperBackgroundProps) {
     <div className={cn("relative min-h-dvh bg-background", className)}>
       {/* Paper grain texture overlay */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundSize: "180px",
@@ -275,13 +275,13 @@ interface NotebookCardProps {
 
 export function NotebookCard({ children, className }: NotebookCardProps) {
   return (
-    <div className={cn("relative bg-card rounded-lg overflow-hidden", className)}>
+    <div className={cn("relative overflow-hidden rounded-lg bg-card", className)}>
       {/* Spine decoration */}
-      <div className="absolute left-0 top-2 bottom-2 w-2 bg-gradient-to-r from-black/8 to-transparent rounded-l" />
+      <div className="absolute top-2 bottom-2 left-0 w-2 rounded-l bg-gradient-to-r from-black/8 to-transparent" />
       {/* Spiral holes */}
-      <div className="absolute left-1 top-4 bottom-4 flex flex-col justify-around">
+      <div className="absolute top-4 bottom-4 left-1 flex flex-col justify-around">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 rounded-full bg-background shadow-inner" />
+          <div key={i} className="h-1.5 w-1.5 rounded-full bg-background shadow-inner" />
         ))}
       </div>
       <div className="pl-5">{children}</div>
@@ -305,11 +305,11 @@ export function TabDividers({ tabs, selected, onChange }: TabDividersProps) {
           onClick={() => onChange(tab.level)}
           whileTap={{ scale: 0.95 }}
           className={cn(
-            "flex-1 py-3 rounded-t-lg font-semibold text-sm transition-all",
+            "flex-1 rounded-t-lg py-3 text-sm font-semibold transition-all",
             "border-2 border-b-0",
             selected === tab.level
-              ? cn(tab.color, "border-transparent shadow-md -mb-[2px] relative z-10")
-              : "bg-muted/50 border-border/50 text-muted-foreground hover:bg-muted",
+              ? cn(tab.color, "relative z-10 -mb-[2px] border-transparent shadow-md")
+              : "border-border/50 bg-muted/50 text-muted-foreground hover:bg-muted",
           )}
           style={{
             clipPath:
@@ -352,7 +352,7 @@ export function WashiwayLogo({ size = "md", className }: WashiwayLogoProps) {
       </h1>
       {/* Signature washi tape underline */}
       <div
-        className={cn("absolute -bottom-1 left-0 h-2 rounded-sm transform -rotate-1", tapeWidth[size])}
+        className={cn("absolute -bottom-1 left-0 h-2 -rotate-1 transform rounded-sm", tapeWidth[size])}
         style={{
           background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
         }}

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 import { useGame } from "@/lib/game-context"
 import { ScorePopup } from "./feedback-overlay"
@@ -45,8 +45,8 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
           ease: [0.25, 0.46, 0.45, 0.94],
         }}
         className={cn(
-          "px-10 py-8 rounded-xl",
-          "bg-card border border-border",
+          "rounded-xl px-10 py-8",
+          "border border-border bg-card",
           "shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
           "flex flex-col items-center justify-center",
           "relative overflow-hidden",
@@ -54,7 +54,7 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
         )}
       >
         <div
-          className="absolute -top-1 -left-3 w-14 h-4 bg-pastel-mint/60 rounded-sm transform -rotate-[20deg]"
+          className="absolute -top-1 -left-3 h-4 w-14 -rotate-[20deg] transform rounded-sm bg-pastel-mint/60"
           style={{
             backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.5) 3px, rgba(255,255,255,0.5) 5px)`,
           }}
@@ -62,7 +62,7 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
 
         {/* Subtle ruled lines for index card feel */}
         <div
-          className="absolute inset-x-6 top-6 bottom-6 pointer-events-none opacity-15"
+          className="pointer-events-none absolute inset-x-6 top-6 bottom-6 opacity-15"
           style={{
             backgroundImage: `repeating-linear-gradient(
               transparent, transparent 26px,
@@ -113,10 +113,10 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
             ease: "easeInOut",
           }}
         >
-          <p className="text-4xl md:text-5xl font-bold font-mono text-card-foreground tracking-wide text-center">
+          <p className="text-center font-mono text-4xl font-bold tracking-wide text-card-foreground md:text-5xl">
             {content}
           </p>
-          {secondary && <p className="text-2xl font-mono text-muted-foreground mt-4 text-center">{secondary}</p>}
+          {secondary && <p className="mt-4 text-center font-mono text-2xl text-muted-foreground">{secondary}</p>}
         </motion.div>
 
         {cardId === "single" && <ScorePopup className="top-0 left-1/2 -translate-x-1/2" />}

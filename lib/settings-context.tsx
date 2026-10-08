@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react"
 import type { GameMode } from "./game-types"
 
 type BestScoreKey = `${GameMode}-${number}`
@@ -26,19 +26,15 @@ interface SettingsProviderProps {
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
   const [baseDifficulty, setBaseDifficulty] = useState(2)
-  const [bestScores, setBestScores] = useState<Record<BestScoreKey, number>>({})
-
-  // Load best scores from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("washiway-best-scores")
-    if (saved) {
-      try {
-        setBestScores(JSON.parse(saved))
-      } catch {
-        // ignore parse errors
-      }
+  const [bestScores, setBestScores] = useState<Record<BestScoreKey, number>>(() => {
+    if (typeof window === "undefined") return {}
+    try {
+      const saved = localStorage.getItem("washiway-best-scores")
+      return saved ? JSON.parse(saved) : {}
+    } catch {
+      return {}
     }
-  }, [])
+  })
 
   const getBestScore = (mode: GameMode, difficulty: number): number => {
     const key: BestScoreKey = `${mode}-${difficulty}`

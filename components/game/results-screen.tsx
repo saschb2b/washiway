@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import type { GameMode, GameStats } from "@/lib/game-types"
 import { useSettings } from "@/lib/settings-context"
 import { useAudio } from "@/lib/audio-context"
@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n-context"
 import { useProgression, type WashiRoll } from "@/lib/progression-context"
 import { PaperBackground, StickyNote, StickerButton, LabelSticker, NotebookCard } from "@/components/ui/stationery"
 import { Check, Sparkles, Gift } from "lucide-react"
+import { TapePatternPreview } from "./washi-binder"
 
 interface ResultsScreenProps {
   stats: GameStats
@@ -16,38 +17,6 @@ interface ResultsScreenProps {
   difficulty: number
   onPlayAgain: () => void
   onBackToMenu: () => void
-}
-
-// Pattern preview for unlocked rolls
-function TapePatternPreview({ roll }: { roll: WashiRoll }) {
-  const patternStyles: Record<string, string> = {
-    dots: `radial-gradient(circle, ${roll.colors.secondary} 2px, transparent 2px)`,
-    stripes: `repeating-linear-gradient(45deg, transparent, transparent 6px, ${roll.colors.secondary} 6px, ${roll.colors.secondary} 10px)`,
-    gingham: `linear-gradient(90deg, ${roll.colors.secondary}33 50%, transparent 50%), linear-gradient(${roll.colors.secondary}33 50%, transparent 50%)`,
-    confetti: `radial-gradient(circle, ${roll.colors.secondary} 1px, transparent 1px), radial-gradient(circle, ${roll.colors.highlight} 1px, transparent 1px)`,
-    grid: `linear-gradient(${roll.colors.secondary} 1px, transparent 1px), linear-gradient(90deg, ${roll.colors.secondary} 1px, transparent 1px)`,
-    waves: `repeating-linear-gradient(0deg, transparent, transparent 4px, ${roll.colors.secondary} 4px, ${roll.colors.secondary} 6px)`,
-    hearts: `radial-gradient(circle, ${roll.colors.secondary} 2px, transparent 2px)`,
-    stars: `radial-gradient(circle, ${roll.colors.secondary} 1.5px, transparent 1.5px)`,
-  }
-
-  return (
-    <div className="h-10 w-24 rounded-md relative overflow-hidden" style={{ backgroundColor: roll.colors.primary }}>
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: patternStyles[roll.pattern],
-          backgroundSize:
-            roll.pattern === "dots" || roll.pattern === "hearts" || roll.pattern === "stars"
-              ? "10px 10px"
-              : roll.pattern === "gingham" || roll.pattern === "grid"
-                ? "12px 12px"
-                : undefined,
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-    </div>
-  )
 }
 
 export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMenu }: ResultsScreenProps) {
@@ -100,9 +69,9 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
 
   return (
     <PaperBackground>
-      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-5 relative overflow-hidden min-h-dvh">
+      <div className="relative flex min-h-dvh flex-1 flex-col items-center justify-center gap-5 overflow-hidden p-6">
         {/* Floating stationery decorations */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
@@ -133,14 +102,14 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center z-10 relative"
+          className="relative z-10 text-center"
         >
           <div
-            className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-4 rounded-sm transform -rotate-2"
+            className="absolute -top-3 left-1/2 h-4 w-24 -translate-x-1/2 -rotate-2 transform rounded-sm"
             style={{ backgroundColor: "var(--theme-primary)", opacity: 0.6 }}
           />
           <LabelSticker className="mb-2">{t.results.gameOver}</LabelSticker>
-          <h2 className="text-2xl font-bold text-foreground mt-2">{modeTranslation.name}</h2>
+          <h2 className="mt-2 text-2xl font-bold text-foreground">{modeTranslation.name}</h2>
         </motion.div>
 
         {/* Big Score on a sticky note */}
@@ -152,8 +121,8 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
         >
           <StickyNote color={isNewBest ? "pink" : "yellow"} className="px-10 py-6" rotate={-2}>
             <div className="text-center">
-              <p className="text-6xl md:text-7xl font-bold font-mono text-foreground">{stats.score.toLocaleString()}</p>
-              <p className="text-muted-foreground mt-1 text-sm uppercase tracking-wide">{t.results.points}</p>
+              <p className="font-mono text-6xl font-bold text-foreground md:text-7xl">{stats.score.toLocaleString()}</p>
+              <p className="mt-1 text-sm tracking-wide text-muted-foreground uppercase">{t.results.points}</p>
 
               {isNewBest && stats.score > 0 && (
                 <motion.div
@@ -163,7 +132,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                   className="mt-3"
                 >
                   <span
-                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold"
+                    className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold"
                     style={{ backgroundColor: "var(--theme-primary)" }}
                   >
                     ★ {t.results.newBest}
@@ -182,10 +151,10 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
           className="z-10"
         >
           <div
-            className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
+            className="flex items-center gap-2 rounded-full px-4 py-2 shadow-sm"
             style={{ backgroundColor: "var(--theme-highlight)", opacity: 0.9 }}
           >
-            <Sparkles className="w-4 h-4 text-amber-600" />
+            <Sparkles className="h-4 w-4 text-amber-600" />
             <span className="font-bold text-foreground">+{swatchesEarned}</span>
             <span className="text-sm text-muted-foreground">{isDE ? "Swatches" : "swatches"}</span>
           </div>
@@ -196,7 +165,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="w-full max-w-xs z-10"
+          className="z-10 w-full max-w-xs"
         >
           <NotebookCard className="p-4 shadow-md">
             <div className="space-y-3">
@@ -208,11 +177,11 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                   transition={{ delay: 0.5 + i * 0.1 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-5 h-5 rounded border-2 border-border bg-card flex items-center justify-center">
-                    <Check className="w-3 h-3" style={{ color: "var(--theme-primary)" }} />
+                  <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-border bg-card">
+                    <Check className="h-3 w-3" style={{ color: "var(--theme-primary)" }} />
                   </div>
-                  <span className="text-sm text-muted-foreground flex-1">{item.label}</span>
-                  <span className="font-bold font-mono" style={{ color: `var(${item.cssVar})` }}>
+                  <span className="flex-1 text-sm text-muted-foreground">{item.label}</span>
+                  <span className="font-mono font-bold" style={{ color: `var(${item.cssVar})` }}>
                     {item.value}
                   </span>
                 </motion.div>
@@ -230,7 +199,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
             className="z-10"
           >
             <div
-              className="px-6 py-3 rounded-xl font-bold text-lg text-foreground shadow-md border-2 border-white/30 animate-float"
+              className="animate-float rounded-xl border-2 border-white/30 px-6 py-3 text-lg font-bold text-foreground shadow-md"
               style={{ backgroundColor: "var(--theme-secondary)" }}
             >
               {stats.maxStreak} {t.results.streak}
@@ -243,7 +212,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="flex flex-col gap-3 w-full max-w-xs z-10"
+          className="z-10 flex w-full max-w-xs flex-col gap-3"
         >
           <StickerButton
             color="mint"
@@ -278,7 +247,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
                 onClick={() => setShowUnlockModal(false)}
               />
               <motion.div
@@ -286,23 +255,23 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8, y: 50 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto bg-card rounded-2xl shadow-2xl z-50 overflow-hidden"
+                className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-sm -translate-y-1/2 overflow-hidden rounded-2xl bg-card shadow-2xl"
               >
                 <div className="p-6 text-center">
                   <div
-                    className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+                    className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
                     style={{ backgroundColor: "var(--theme-primary)" }}
                   >
-                    <Gift className="w-8 h-8 text-foreground" />
+                    <Gift className="h-8 w-8 text-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">
+                  <h3 className="mb-2 text-xl font-bold">
                     {isDE ? "Neue Rolle freigeschaltet!" : "New Roll Unlocked!"}
                   </h3>
 
-                  <div className="space-y-3 my-4">
+                  <div className="my-4 space-y-3">
                     {newUnlocks.map((roll) => (
-                      <div key={roll.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                        <TapePatternPreview roll={roll} />
+                      <div key={roll.id} className="flex items-center gap-3 rounded-lg bg-muted/30 p-3">
+                        <TapePatternPreview roll={roll} size="sm" />
                         <div className="text-left">
                           <p className="font-bold">{isDE ? roll.nameDE : roll.name}</p>
                           <p className="text-xs text-muted-foreground capitalize">{roll.pattern}</p>
@@ -317,7 +286,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                       play("tap")
                       setShowUnlockModal(false)
                     }}
-                    className="w-full mt-2"
+                    className="mt-2 w-full"
                   >
                     {isDE ? "Super!" : "Awesome!"}
                   </StickerButton>

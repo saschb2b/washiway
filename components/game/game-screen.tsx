@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
-import { GAME_DURATION, GAME_MODES, type GameMode, type GameStats } from "@/lib/game-types"
+import { motion } from "motion/react"
+import { GAME_DURATION, type GameMode, type GameStats } from "@/lib/game-types"
 import { TruthButtons } from "./inputs/truth-buttons"
 import { CompareButtons } from "./inputs/compare-buttons"
 import { DigitPad } from "./inputs/digit-pad"
@@ -27,10 +26,10 @@ export function GameScreen({ mode, onGameEnd }: GameScreenProps) {
 
 function DecoWashiStrips() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* Top left diagonal tape */}
       <div
-        className="absolute -top-4 -left-12 w-40 h-5 rounded-sm transform -rotate-[35deg]"
+        className="absolute -top-4 -left-12 h-5 w-40 -rotate-[35deg] transform rounded-sm"
         style={{
           backgroundColor: "var(--theme-primary)",
           opacity: 0.4,
@@ -39,7 +38,7 @@ function DecoWashiStrips() {
       />
       {/* Top right small tape */}
       <div
-        className="absolute top-20 -right-8 w-28 h-4 rounded-sm transform rotate-[25deg]"
+        className="absolute top-20 -right-8 h-4 w-28 rotate-[25deg] transform rounded-sm"
         style={{
           backgroundColor: "var(--theme-secondary)",
           opacity: 0.3,
@@ -49,7 +48,7 @@ function DecoWashiStrips() {
       />
       {/* Bottom left tape */}
       <div
-        className="absolute bottom-32 -left-10 w-36 h-4 rounded-sm transform -rotate-[20deg]"
+        className="absolute bottom-32 -left-10 h-4 w-36 -rotate-[20deg] transform rounded-sm"
         style={{
           backgroundColor: "var(--theme-highlight)",
           opacity: 0.3,
@@ -58,7 +57,7 @@ function DecoWashiStrips() {
       />
       {/* Bottom right diagonal tape */}
       <div
-        className="absolute -bottom-2 -right-16 w-44 h-5 rounded-sm transform rotate-[30deg]"
+        className="absolute -right-16 -bottom-2 h-5 w-44 rotate-[30deg] transform rounded-sm"
         style={{
           backgroundColor: "var(--theme-muted)",
           opacity: 0.35,
@@ -67,7 +66,7 @@ function DecoWashiStrips() {
       />
       {/* Middle accent tape */}
       <div
-        className="absolute top-1/2 -left-6 w-20 h-3 rounded-sm transform -rotate-[15deg]"
+        className="absolute top-1/2 -left-6 h-3 w-20 -rotate-[15deg] transform rounded-sm"
         style={{ backgroundColor: "var(--theme-secondary)", opacity: 0.25 }}
       />
     </div>
@@ -75,37 +74,29 @@ function DecoWashiStrips() {
 }
 
 function GameScreenContent() {
-  const { mode, score, question, timeLeft } = useGame()
-  const modeConfig = GAME_MODES.find((m) => m.id === mode)
-  const gameStarted = useRef(false)
-
-  useEffect(() => {
-    if (!gameStarted.current) {
-      gameStarted.current = true
-    }
-  }, [])
+  const { score } = useGame()
 
   return (
     <PaperBackground>
-      <div className="flex-1 flex flex-col relative overflow-hidden min-h-dvh">
+      <div className="relative flex min-h-dvh flex-1 flex-col overflow-hidden">
         <DecoWashiStrips />
 
-        <div className="mx-3 mt-3 relative">
+        <div className="relative mx-3 mt-3">
           <div
-            className="absolute -top-1.5 left-4 w-12 h-3 rounded-sm transform -rotate-2 z-20"
+            className="absolute -top-1.5 left-4 z-20 h-3 w-12 -rotate-2 transform rounded-sm"
             style={{
               backgroundColor: "var(--theme-primary)",
               backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.5) 4px, rgba(255,255,255,0.5) 6px)`,
             }}
           />
-          <div className="py-2 px-3 bg-card rounded-xl border border-border shadow-[0_2px_8px_rgba(0,0,0,0.05)] flex items-center justify-between relative z-10">
+          <div className="relative z-10 flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
             <TimerRing duration={GAME_DURATION} />
-            <div className="text-right relative z-10">
+            <div className="relative z-10 text-right">
               <motion.p
                 key={score}
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
-                className="text-2xl font-bold font-mono text-foreground"
+                className="font-mono text-2xl font-bold text-foreground"
               >
                 {score.toLocaleString()}
               </motion.p>
@@ -114,23 +105,23 @@ function GameScreenContent() {
           </div>
         </div>
         {/* Burst indicator */}
-        <div className="flex justify-center mt-2">
+        <div className="mt-2 flex justify-center">
           <BurstIndicator />
         </div>
 
         {/* Question Display */}
-        <FeedbackOverlay className="flex-1 flex items-center justify-center p-4">
+        <FeedbackOverlay className="flex flex-1 items-center justify-center p-4">
           <ModeQuestionDisplay />
         </FeedbackOverlay>
 
         <div className="relative">
           <div
-            className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-[6px] rounded-full opacity-60"
+            className="absolute -top-3 left-1/2 h-[6px] w-24 -translate-x-1/2 rounded-full opacity-60"
             style={{
               background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
             }}
           />
-          <div className="p-4 pb-8 relative z-10">
+          <div className="relative z-10 p-4 pb-8">
             <ModeInput />
           </div>
         </div>
@@ -145,9 +136,9 @@ function ModeQuestionDisplay() {
   switch (mode) {
     case "compare":
       return (
-        <QuestionCardGroup className="flex gap-4 w-full max-w-md">
-          <QuestionCard cardId="left" content={question.display} className="flex-1 py-10 px-4" />
-          <QuestionCard cardId="right" content={question.displaySecondary || ""} className="flex-1 py-10 px-4" />
+        <QuestionCardGroup className="flex w-full max-w-md gap-4">
+          <QuestionCard cardId="left" content={question.display} className="flex-1 px-4 py-10" />
+          <QuestionCard cardId="right" content={question.displaySecondary || ""} className="flex-1 px-4 py-10" />
         </QuestionCardGroup>
       )
 
@@ -155,7 +146,7 @@ function ModeQuestionDisplay() {
       return (
         <div className="flex flex-col items-center gap-3">
           <div
-            className="px-5 py-2.5 rounded-lg relative overflow-hidden"
+            className="relative overflow-hidden rounded-lg px-5 py-2.5"
             style={{
               backgroundColor: "var(--theme-highlight)",
               opacity: 0.9,
@@ -163,9 +154,9 @@ function ModeQuestionDisplay() {
             }}
           >
             {/* Torn edge effects */}
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-r from-black/[0.06] to-transparent" />
-            <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.06] to-transparent" />
-            <span className="text-lg font-bold text-foreground relative z-10">{question.display}</span>
+            <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-black/[0.06] to-transparent" />
+            <div className="absolute top-0 right-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.06] to-transparent" />
+            <span className="relative z-10 text-lg font-bold text-foreground">{question.display}</span>
           </div>
           <p className="text-sm text-muted-foreground">Find the match</p>
         </div>
@@ -192,10 +183,10 @@ function ModeInput() {
     case "combo":
       return (
         <DigitPad
+          key={question.id}
           onAnswer={submitAnswer}
           disabled={disabled}
           correctAnswer={question.answer as number}
-          questionId={question.id}
         />
       )
     default:
