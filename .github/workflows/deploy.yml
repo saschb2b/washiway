@@ -31,6 +31,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm format:check
+      - run: pnpm test
 
       # Pages serves the site from /<repo>; configure-pages reports the exact
       # prefix (empty with a custom domain). Pull requests build at the root.
