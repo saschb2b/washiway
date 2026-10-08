@@ -1,7 +1,6 @@
 import type { Question, GameMode } from "./game-types"
 
-const operators = ["+", "-", "×", "÷"] as const
-type Operator = (typeof operators)[number]
+type Operator = "+" | "-" | "×" | "÷"
 
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -179,7 +178,6 @@ function generateMatchQuestion(difficulty: number): Question {
 
   // Generate 3 expressions
   const expressions: { display: string; value: number }[] = []
-  const maxNum = [8, 12, 18, 30, 50][difficulty - 1] || 12
 
   // Handle "closest to X" specially
   if (rule.id.startsWith("closest-")) {
@@ -252,7 +250,6 @@ function generateMatchQuestion(difficulty: number): Question {
 
   // Randomize positions
   const allOptions = [matchingExpr, ...nonMatching]
-  const correctIndex = 0
 
   // Shuffle
   for (let i = allOptions.length - 1; i > 0; i--) {

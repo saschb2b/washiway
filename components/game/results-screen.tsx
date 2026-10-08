@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n-context"
 import { useProgression, type WashiRoll } from "@/lib/progression-context"
 import { PaperBackground, StickyNote, StickerButton, LabelSticker, NotebookCard } from "@/components/ui/stationery"
 import { Check, Sparkles, Gift } from "lucide-react"
+import { TapePatternPreview } from "./washi-binder"
 
 interface ResultsScreenProps {
   stats: GameStats
@@ -16,38 +17,6 @@ interface ResultsScreenProps {
   difficulty: number
   onPlayAgain: () => void
   onBackToMenu: () => void
-}
-
-// Pattern preview for unlocked rolls
-function TapePatternPreview({ roll }: { roll: WashiRoll }) {
-  const patternStyles: Record<string, string> = {
-    dots: `radial-gradient(circle, ${roll.colors.secondary} 2px, transparent 2px)`,
-    stripes: `repeating-linear-gradient(45deg, transparent, transparent 6px, ${roll.colors.secondary} 6px, ${roll.colors.secondary} 10px)`,
-    gingham: `linear-gradient(90deg, ${roll.colors.secondary}33 50%, transparent 50%), linear-gradient(${roll.colors.secondary}33 50%, transparent 50%)`,
-    confetti: `radial-gradient(circle, ${roll.colors.secondary} 1px, transparent 1px), radial-gradient(circle, ${roll.colors.highlight} 1px, transparent 1px)`,
-    grid: `linear-gradient(${roll.colors.secondary} 1px, transparent 1px), linear-gradient(90deg, ${roll.colors.secondary} 1px, transparent 1px)`,
-    waves: `repeating-linear-gradient(0deg, transparent, transparent 4px, ${roll.colors.secondary} 4px, ${roll.colors.secondary} 6px)`,
-    hearts: `radial-gradient(circle, ${roll.colors.secondary} 2px, transparent 2px)`,
-    stars: `radial-gradient(circle, ${roll.colors.secondary} 1.5px, transparent 1.5px)`,
-  }
-
-  return (
-    <div className="relative h-10 w-24 overflow-hidden rounded-md" style={{ backgroundColor: roll.colors.primary }}>
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: patternStyles[roll.pattern],
-          backgroundSize:
-            roll.pattern === "dots" || roll.pattern === "hearts" || roll.pattern === "stars"
-              ? "10px 10px"
-              : roll.pattern === "gingham" || roll.pattern === "grid"
-                ? "12px 12px"
-                : undefined,
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-    </div>
-  )
 }
 
 export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMenu }: ResultsScreenProps) {
@@ -302,7 +271,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
                   <div className="my-4 space-y-3">
                     {newUnlocks.map((roll) => (
                       <div key={roll.id} className="flex items-center gap-3 rounded-lg bg-muted/30 p-3">
-                        <TapePatternPreview roll={roll} />
+                        <TapePatternPreview roll={roll} size="sm" />
                         <div className="text-left">
                           <p className="font-bold">{isDE ? roll.nameDE : roll.name}</p>
                           <p className="text-xs text-muted-foreground capitalize">{roll.pattern}</p>

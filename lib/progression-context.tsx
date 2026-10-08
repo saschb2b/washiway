@@ -378,9 +378,6 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
     if (id === "starter-mint" || unlockedRolls.includes(id)) {
       setSelectedRollState(id)
       saveProgress(stats, swatches, unlockedRolls, id)
-      console.log("[v0] Selected roll changed to:", id)
-    } else {
-      console.log("[v0] Cannot select locked roll:", id, "unlocked:", unlockedRolls)
     }
   }
 

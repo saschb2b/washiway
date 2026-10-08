@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSettings } from "@/lib/settings-context"
 import type { GameMode } from "@/lib/game-types"
@@ -25,16 +25,14 @@ const MODE_COLORS: Record<GameMode, { color: string; icon: string }> = {
 }
 
 export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps) {
-  const [lastMode, setLastMode] = useState<GameMode | null>(null)
+  const [lastMode, setLastMode] = useState<GameMode | null>(mode)
   const { baseDifficulty, setBaseDifficulty, getBestScore } = useSettings()
   const { play } = useAudio()
   const { t } = useI18n()
 
-  useEffect(() => {
-    if (mode !== null) {
-      setLastMode(mode)
-    }
-  }, [mode])
+  if (mode !== null && mode !== lastMode) {
+    setLastMode(mode)
+  }
 
   // Use lastMode for rendering content so it stays visible during exit
   const displayMode = mode ?? lastMode ?? "truth"

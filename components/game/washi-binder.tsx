@@ -5,7 +5,13 @@ import type React from "react"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Lock, Check, Sparkles } from "lucide-react"
-import { useProgression, WASHI_ROLLS, ALL_ACHIEVEMENTS, type WashiRoll } from "@/lib/progression-context"
+import {
+  useProgression,
+  WASHI_ROLLS,
+  ALL_ACHIEVEMENTS,
+  type Achievement,
+  type WashiRoll,
+} from "@/lib/progression-context"
 import { useI18n } from "@/lib/i18n-context"
 import { useAudio } from "@/lib/audio-context"
 import { cn } from "@/lib/utils"
@@ -19,7 +25,6 @@ type TabType = "rolls" | "achievements"
 
 function PatternIcon({ pattern, color, size }: { pattern: WashiRoll["pattern"]; color: string; size: number }) {
   const s = size
-  const half = s / 2
 
   const patterns: Record<string, React.ReactNode> = {
     // Mint leaves - small leaf shapes
@@ -121,7 +126,7 @@ function PatternIcon({ pattern, color, size }: { pattern: WashiRoll["pattern"]; 
   return patterns[pattern] || patterns.mint
 }
 
-function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm" | "md" | "lg" }) {
+export function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm" | "md" | "lg" }) {
   const sizeClasses = {
     sm: "h-10 w-24",
     md: "h-12 w-32",
@@ -373,7 +378,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
 }
 
 interface AchievementsTabProps {
-  getProgress: (achievement: { id: string; type: string; target: number }) => {
+  getProgress: (achievement: Achievement) => {
     current: number
     target: number
     complete: boolean

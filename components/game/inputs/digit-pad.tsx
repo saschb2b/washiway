@@ -8,26 +8,16 @@ interface DigitPadProps {
   onAnswer: (answer: number) => void
   disabled?: boolean
   correctAnswer: number
-  questionId: string
 }
 
-export function DigitPad({ onAnswer, disabled, correctAnswer, questionId }: DigitPadProps) {
+// Rendered with key={question.id}, so every question starts from a fresh pad.
+export function DigitPad({ onAnswer, disabled, correctAnswer }: DigitPadProps) {
   const [input, setInput] = useState("")
   const [isNegative, setIsNegative] = useState(false)
 
   const inputRef = useRef("")
   const isNegativeRef = useRef(false)
   const hasSubmittedRef = useRef(false)
-  const lastQuestionIdRef = useRef(questionId)
-
-  if (questionId !== lastQuestionIdRef.current) {
-    lastQuestionIdRef.current = questionId
-    inputRef.current = ""
-    isNegativeRef.current = false
-    hasSubmittedRef.current = false
-    if (input !== "") setInput("")
-    if (isNegative !== false) setIsNegative(false)
-  }
 
   useEffect(() => {
     if (disabled) return

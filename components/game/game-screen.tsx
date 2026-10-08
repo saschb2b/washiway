@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { GAME_DURATION, GAME_MODES, type GameMode, type GameStats } from "@/lib/game-types"
+import { GAME_DURATION, type GameMode, type GameStats } from "@/lib/game-types"
 import { TruthButtons } from "./inputs/truth-buttons"
 import { CompareButtons } from "./inputs/compare-buttons"
 import { DigitPad } from "./inputs/digit-pad"
@@ -75,15 +74,7 @@ function DecoWashiStrips() {
 }
 
 function GameScreenContent() {
-  const { mode, score, question, timeLeft } = useGame()
-  const modeConfig = GAME_MODES.find((m) => m.id === mode)
-  const gameStarted = useRef(false)
-
-  useEffect(() => {
-    if (!gameStarted.current) {
-      gameStarted.current = true
-    }
-  }, [])
+  const { score } = useGame()
 
   return (
     <PaperBackground>
@@ -192,10 +183,10 @@ function ModeInput() {
     case "combo":
       return (
         <DigitPad
+          key={question.id}
           onAnswer={submitAnswer}
           disabled={disabled}
           correctAnswer={question.answer as number}
-          questionId={question.id}
         />
       )
     default:

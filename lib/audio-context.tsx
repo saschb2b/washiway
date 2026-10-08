@@ -214,7 +214,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     if (musicSourceRef.current) {
       try {
         musicSourceRef.current.stop()
-      } catch (e) {
+      } catch {
         // Already stopped
       }
       musicSourceRef.current = null
