@@ -137,7 +137,7 @@ function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm
       style={{ backgroundColor: roll.colors.primary }}
     >
       {/* Torn left edge */}
-      <svg className="absolute left-0 top-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
+      <svg className="absolute top-0 left-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
         <path
           d="M8 0 L8 100 L6 98 L4 100 L2 97 L0 100 L2 95 L0 92 L3 88 L0 85 L2 80 L0 75 L3 72 L0 68 L2 65 L0 60 L3 55 L0 50 L2 45 L0 40 L3 35 L0 30 L2 25 L0 20 L3 15 L0 10 L2 5 L0 0 Z"
           fill={roll.colors.primary}
@@ -145,7 +145,7 @@ function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm
       </svg>
 
       {/* Torn right edge */}
-      <svg className="absolute right-0 top-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
+      <svg className="absolute top-0 right-0 h-full w-2" preserveAspectRatio="none" viewBox="0 0 8 100">
         <path
           d="M0 0 L0 100 L2 98 L4 100 L6 97 L8 100 L6 95 L8 92 L5 88 L8 85 L6 80 L8 75 L5 72 L8 68 L6 65 L8 60 L5 55 L8 50 L6 45 L8 40 L5 35 L8 30 L6 25 L8 20 L5 15 L8 10 L6 5 L8 0 Z"
           fill={roll.colors.primary}
@@ -171,8 +171,8 @@ function TapePatternPreview({ roll, size = "md" }: { roll: WashiRoll; size?: "sm
       </div>
 
       {/* Tape sheen - glossy effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent" />
     </div>
   )
 }
@@ -195,7 +195,7 @@ export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
           />
 
           {/* Binder */}
@@ -204,25 +204,25 @@ export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 50 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 bg-background rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col"
+            className="fixed inset-4 z-50 flex flex-col overflow-hidden rounded-2xl bg-background shadow-2xl md:inset-8 lg:inset-16"
           >
             {/* Binder spine decoration */}
-            <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-pastel-peach to-pastel-peach/50">
-              <div className="absolute inset-y-4 left-1 w-1 flex flex-col justify-around">
+            <div className="absolute top-0 bottom-0 left-0 w-3 bg-gradient-to-r from-pastel-peach to-pastel-peach/50">
+              <div className="absolute inset-y-4 left-1 flex w-1 flex-col justify-around">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-background shadow-inner" />
+                  <div key={i} className="h-1.5 w-1.5 rounded-full bg-background shadow-inner" />
                 ))}
               </div>
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between p-4 pl-6 border-b border-border">
+            <div className="flex items-center justify-between border-b border-border p-4 pl-6">
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-bold text-foreground">{isDE ? "Mein Washi Binder" : "My Washi Binder"}</h2>
                 {/* Swatches counter */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-pastel-yellow/60 rounded-full">
-                  <Sparkles className="w-4 h-4 text-amber-600" />
-                  <span className="font-bold text-sm text-foreground">{swatches}</span>
+                <div className="flex items-center gap-1.5 rounded-full bg-pastel-yellow/60 px-3 py-1.5">
+                  <Sparkles className="h-4 w-4 text-amber-600" />
+                  <span className="text-sm font-bold text-foreground">{swatches}</span>
                 </div>
               </div>
 
@@ -231,14 +231,14 @@ export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
                   play("tap")
                   onClose()
                 }}
-                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 px-4 pl-6 pt-3">
+            <div className="flex gap-1 px-4 pt-3 pl-6">
               {(["rolls", "achievements"] as TabType[]).map((tab) => (
                 <button
                   key={tab}
@@ -247,10 +247,10 @@ export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
                     setActiveTab(tab)
                   }}
                   className={cn(
-                    "px-4 py-2 rounded-t-lg font-semibold text-sm transition-all border-2 border-b-0",
+                    "rounded-t-lg border-2 border-b-0 px-4 py-2 text-sm font-semibold transition-all",
                     activeTab === tab
-                      ? "bg-card border-border shadow-sm -mb-[2px] relative z-10"
-                      : "bg-muted/30 border-transparent text-muted-foreground hover:bg-muted/50",
+                      ? "relative z-10 -mb-[2px] border-border bg-card shadow-sm"
+                      : "border-transparent bg-muted/30 text-muted-foreground hover:bg-muted/50",
                   )}
                 >
                   {tab === "rolls" ? (isDE ? "Tape Rollen" : "Tape Rolls") : isDE ? "Erfolge" : "Achievements"}
@@ -259,7 +259,7 @@ export function WashiBinder({ isOpen, onClose }: WashiBinderProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-auto bg-card border-t-2 border-border ml-3 rounded-tl-lg">
+            <div className="ml-3 flex-1 overflow-auto rounded-tl-lg border-t-2 border-border bg-card">
               {activeTab === "rolls" ? (
                 <RollsTab
                   unlockedRolls={unlockedRolls}
@@ -292,7 +292,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
   const { getAchievementProgress } = useProgression()
 
   return (
-    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
       {WASHI_ROLLS.map((roll) => {
         const isUnlocked = roll.id === "starter-mint" || unlockedRolls.includes(roll.id)
         const isSelected = selectedRoll === roll.id
@@ -305,7 +305,7 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
             disabled={!isUnlocked}
             whileTap={isUnlocked ? { scale: 0.98 } : undefined}
             className={cn(
-              "relative p-3 rounded-xl border-2 text-left transition-all",
+              "relative rounded-xl border-2 p-3 text-left transition-all",
               isUnlocked
                 ? isSelected
                   ? "border-foreground/30 bg-pastel-mint/20 shadow-md"
@@ -315,42 +315,42 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
           >
             {/* Selected indicator */}
             {isSelected && isUnlocked && (
-              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-pastel-mint flex items-center justify-center">
-                <Check className="w-4 h-4 text-foreground" />
+              <div className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-pastel-mint">
+                <Check className="h-4 w-4 text-foreground" />
               </div>
             )}
 
             {/* Lock indicator - only show if NOT unlocked */}
             {!isUnlocked && (
-              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-muted flex items-center justify-center">
-                <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+              <div className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-muted">
+                <Lock className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
             )}
 
             <div className="flex items-start gap-3">
               {/* Tape preview - only grayscale when locked */}
-              <div className={cn(!isUnlocked && "grayscale opacity-50")}>
+              <div className={cn(!isUnlocked && "opacity-50 grayscale")}>
                 <TapePatternPreview roll={roll} size="md" />
               </div>
 
-              <div className="flex-1 min-w-0">
-                <h3 className={cn("font-bold text-sm", !isUnlocked && "text-muted-foreground")}>
+              <div className="min-w-0 flex-1">
+                <h3 className={cn("text-sm font-bold", !isUnlocked && "text-muted-foreground")}>
                   {isDE ? roll.nameDE : roll.name}
                 </h3>
 
                 {/* Only show unlock requirement for locked rolls */}
                 {!isUnlocked && (
                   <div className="mt-1.5">
-                    <p className="text-xs text-muted-foreground mb-1">
+                    <p className="mb-1 text-xs text-muted-foreground">
                       {isDE ? roll.unlockRequirement.descriptionDE : roll.unlockRequirement.description}
                     </p>
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                       <div
                         className="h-full bg-pastel-blue transition-all"
                         style={{ width: `${Math.min(100, (progress.current / progress.target) * 100)}%` }}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       {progress.current} / {progress.target}
                     </p>
                   </div>
@@ -358,10 +358,10 @@ function RollsTab({ unlockedRolls, selectedRoll, onSelectRoll, isDE }: RollsTabP
 
                 {/* Show "Equipped" or "Tap to equip" for unlocked rolls */}
                 {isUnlocked && !isSelected && (
-                  <p className="text-xs text-muted-foreground mt-1">{isDE ? "Tippen zum Auswählen" : "Tap to equip"}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{isDE ? "Tippen zum Auswählen" : "Tap to equip"}</p>
                 )}
                 {isUnlocked && isSelected && (
-                  <p className="text-xs text-pastel-mint font-medium mt-1">{isDE ? "Ausgerüstet" : "Equipped"}</p>
+                  <p className="mt-1 text-xs font-medium text-pastel-mint">{isDE ? "Ausgerüstet" : "Equipped"}</p>
                 )}
               </div>
             </div>
@@ -383,7 +383,7 @@ interface AchievementsTabProps {
 
 function AchievementsTab({ getProgress, isDE }: AchievementsTabProps) {
   return (
-    <div className="p-4 space-y-2">
+    <div className="space-y-2 p-4">
       {ALL_ACHIEVEMENTS.map((achievement) => {
         const progress = getProgress(achievement)
 
@@ -391,7 +391,7 @@ function AchievementsTab({ getProgress, isDE }: AchievementsTabProps) {
           <div
             key={achievement.id}
             className={cn(
-              "p-3 rounded-lg border-2 transition-all",
+              "rounded-lg border-2 p-3 transition-all",
               progress.complete ? "border-pastel-mint/50 bg-pastel-mint/10" : "border-border bg-card",
             )}
           >
@@ -399,19 +399,19 @@ function AchievementsTab({ getProgress, isDE }: AchievementsTabProps) {
               {/* Status icon */}
               <div
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full",
                   progress.complete ? "bg-pastel-mint" : "bg-muted",
                 )}
               >
                 {progress.complete ? (
-                  <Check className="w-4 h-4 text-foreground" />
+                  <Check className="h-4 w-4 text-foreground" />
                 ) : (
-                  <Sparkles className="w-4 h-4 text-muted-foreground" />
+                  <Sparkles className="h-4 w-4 text-muted-foreground" />
                 )}
               </div>
 
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm">{isDE ? achievement.nameDE : achievement.name}</h3>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-bold">{isDE ? achievement.nameDE : achievement.name}</h3>
                 <p className="text-xs text-muted-foreground">
                   {isDE ? achievement.descriptionDE : achievement.description}
                 </p>
@@ -419,13 +419,13 @@ function AchievementsTab({ getProgress, isDE }: AchievementsTabProps) {
                 {/* Progress bar */}
                 {!progress.complete && (
                   <div className="mt-2">
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                       <div
                         className="h-full bg-pastel-blue transition-all"
                         style={{ width: `${Math.min(100, (progress.current / progress.target) * 100)}%` }}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       {progress.current} / {progress.target}
                     </p>
                   </div>

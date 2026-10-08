@@ -41,7 +41,7 @@ export function MatchButtons({ options, onAnswer, disabled }: MatchButtonsProps)
   }, [disabled, options.length, onAnswer, play])
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-sm mx-auto">
+    <div className="mx-auto flex w-full max-w-sm flex-col gap-3">
       {options.map((option, index) => (
         <motion.div
           key={index}
@@ -56,11 +56,11 @@ export function MatchButtons({ options, onAnswer, disabled }: MatchButtonsProps)
               play("tap")
               onAnswer(index)
             }}
-            className={disabled ? "opacity-60 pointer-events-none" : ""}
+            className={disabled ? "pointer-events-none opacity-60" : ""}
           >
             <div className="flex items-center justify-between p-4">
-              <span className="text-xl font-bold font-mono text-foreground">{option}</span>
-              <span className="text-xs font-mono bg-black/10 px-1.5 py-0.5 rounded text-foreground/50">
+              <span className="font-mono text-xl font-bold text-foreground">{option}</span>
+              <span className="rounded bg-black/10 px-1.5 py-0.5 font-mono text-xs text-foreground/50">
                 {KEY_HINTS[index]}
               </span>
             </div>

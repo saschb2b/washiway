@@ -8,17 +8,7 @@ export interface WashiRoll {
   name: string
   nameDE: string
   pattern:
-    | "pokeballs"
-    | "cats"
-    | "dogs"
-    | "frogs"
-    | "flowers"
-    | "snowflakes"
-    | "bees"
-    | "leaves"
-    | "music"
-    | "stars"
-    | "mint"
+    "pokeballs" | "cats" | "dogs" | "frogs" | "flowers" | "snowflakes" | "bees" | "leaves" | "music" | "stars" | "mint"
   colors: {
     primary: string
     secondary: string

@@ -79,12 +79,12 @@ function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, on
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "flex-1 py-7 rounded-xl text-2xl font-bold relative overflow-hidden",
+        "relative flex-1 overflow-hidden rounded-xl py-7 text-2xl font-bold",
         "text-foreground",
         "shadow-[0_4px_0_rgba(0,0,0,0.08),0_6px_16px_rgba(0,0,0,0.1)]",
         "active:shadow-[0_2px_0_rgba(0,0,0,0.08),0_3px_8px_rgba(0,0,0,0.1)]",
         "transition-shadow duration-100",
-        "disabled:opacity-50 disabled:pointer-events-none",
+        "disabled:pointer-events-none disabled:opacity-50",
       )}
       style={{
         backgroundColor: themeColor,
@@ -93,16 +93,16 @@ function WashiTapeButton({ children, themeColor, pattern = "solid", disabled, on
       }}
     >
       {/* Left torn edge */}
-      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-r from-black/[0.06] to-transparent" />
+      <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-r from-black/[0.06] to-transparent" />
       {/* Right torn edge */}
-      <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-gradient-to-l from-black/[0.06] to-transparent" />
+      <div className="absolute top-0 right-0 bottom-0 w-1.5 bg-gradient-to-l from-black/[0.06] to-transparent" />
       {/* Top highlight shine */}
-      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+      <div className="absolute top-0 right-4 left-4 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
       {/* Shine notch */}
-      <div className="absolute top-3 right-4 w-8 h-2 bg-white/40 rounded-full transform -rotate-12" />
+      <div className="absolute top-3 right-4 h-2 w-8 -rotate-12 transform rounded-full bg-white/40" />
       <span className="relative z-10">{children}</span>
       {hint && (
-        <span className="absolute bottom-2 right-2 text-xs font-mono bg-black/10 px-1.5 py-0.5 rounded text-foreground/50">
+        <span className="absolute right-2 bottom-2 rounded bg-black/10 px-1.5 py-0.5 font-mono text-xs text-foreground/50">
           {hint}
         </span>
       )}

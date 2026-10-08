@@ -41,7 +41,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
 
   return (
     <PaperBackground>
-      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-5 relative overflow-hidden min-h-dvh">
+      <div className="relative flex min-h-dvh flex-1 flex-col items-center justify-center gap-5 overflow-hidden p-6">
         {/* Language toggle */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -63,10 +63,10 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
               play("tap")
               setIsBinderOpen(true)
             }}
-            className="w-11 h-11 rounded-xl border-2 border-black/[0.08] flex items-center justify-center hover:scale-105 transition-transform shadow-sm"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-black/[0.08] shadow-sm transition-transform hover:scale-105"
             style={{ backgroundColor: "var(--theme-highlight)" }}
           >
-            <BookOpen className="w-5 h-5 text-foreground" />
+            <BookOpen className="h-5 w-5 text-foreground" />
           </button>
 
           {/* Mute button */}
@@ -75,19 +75,19 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
               play("tap")
               setMuted(!isMuted)
             }}
-            className="w-11 h-11 rounded-xl bg-card border-2 border-border flex items-center justify-center hover:bg-muted transition-colors shadow-sm"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-border bg-card shadow-sm transition-colors hover:bg-muted"
           >
             {isMuted ? (
-              <VolumeX className="w-5 h-5 text-muted-foreground" />
+              <VolumeX className="h-5 w-5 text-muted-foreground" />
             ) : (
-              <Volume2 className="w-5 h-5 text-foreground" />
+              <Volume2 className="h-5 w-5 text-foreground" />
             )}
           </button>
         </motion.div>
 
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div
-            className="absolute top-[5%] -left-12 w-40 h-4 transform -rotate-12 rounded-sm"
+            className="absolute top-[5%] -left-12 h-4 w-40 -rotate-12 transform rounded-sm"
             style={{
               backgroundColor: "var(--theme-highlight)",
               opacity: 0.5,
@@ -95,7 +95,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             }}
           />
           <div
-            className="absolute top-[20%] -right-8 w-32 h-3.5 transform rotate-6 rounded-sm"
+            className="absolute top-[20%] -right-8 h-3.5 w-32 rotate-6 transform rounded-sm"
             style={{
               backgroundColor: "var(--theme-muted)",
               opacity: 0.5,
@@ -104,7 +104,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             }}
           />
           <div
-            className="absolute bottom-[18%] left-[3%] w-28 h-3 transform -rotate-2 rounded-sm"
+            className="absolute bottom-[18%] left-[3%] h-3 w-28 -rotate-2 transform rounded-sm"
             style={{
               backgroundColor: "var(--theme-primary)",
               opacity: 0.4,
@@ -112,7 +112,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             }}
           />
           <div
-            className="absolute bottom-[7%] right-[5%] w-24 h-3 transform rotate-8 rounded-sm"
+            className="absolute right-[5%] bottom-[7%] h-3 w-24 rotate-8 transform rounded-sm"
             style={{
               backgroundColor: "var(--theme-secondary)",
               opacity: 0.4,
@@ -120,7 +120,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             }}
           />
           <div
-            className="absolute top-[45%] -left-6 w-20 h-2.5 transform rotate-3 rounded-sm"
+            className="absolute top-[45%] -left-6 h-2.5 w-20 rotate-3 transform rounded-sm"
             style={{ backgroundColor: "var(--theme-highlight)", opacity: 0.3 }}
           />
         </div>
@@ -139,22 +139,22 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="w-full max-w-sm space-y-3 z-10"
+          className="z-10 w-full max-w-sm space-y-3"
         >
-          <div className="flex items-center gap-3 mb-4">
+          <div className="mb-4 flex items-center gap-3">
             <div
-              className="flex-1 h-2 rounded-sm"
+              className="h-2 flex-1 rounded-sm"
               style={{
                 backgroundColor: "var(--theme-primary)",
                 opacity: 0.5,
                 backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 6px)`,
               }}
             />
-            <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider px-1">
+            <span className="px-1 text-sm font-bold tracking-wider text-muted-foreground uppercase">
               {t.menu.chooseMode}
             </span>
             <div
-              className="flex-1 h-2 rounded-sm"
+              className="h-2 flex-1 rounded-sm"
               style={{
                 backgroundColor: "var(--theme-primary)",
                 opacity: 0.5,
@@ -182,15 +182,15 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
                   }}
                 >
                   <div className="flex items-center gap-3 p-3.5">
-                    <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-base font-bold shadow-sm border border-black/[0.06] text-foreground/80">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-black/[0.06] bg-white/80 text-base font-bold text-foreground/80 shadow-sm">
                       {style.icon}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="font-bold text-foreground">{modeTranslation.name}</p>
-                      <p className="text-sm text-foreground/70 truncate">{modeTranslation.description}</p>
+                      <p className="truncate text-sm text-foreground/70">{modeTranslation.description}</p>
                     </div>
-                    <div className="w-7 h-7 rounded-full bg-white/60 flex items-center justify-center flex-shrink-0">
-                      <ChevronRight className="w-4 h-4 text-foreground/50" />
+                    <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/60">
+                      <ChevronRight className="h-4 w-4 text-foreground/50" />
                     </div>
                   </div>
                 </WashiTapeStrip>

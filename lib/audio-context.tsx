@@ -27,7 +27,8 @@ const SOUND_MAP: Record<SoundType, string> = {
   newBest: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton5-M9As8vAVMgHqR8JPHZBze95jGBCbik.wav",
 }
 
-const MUSIC_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Morning-Routine-Lofi-Study-Music%28chosic.com%29-92GYYwByyIUxZlgh93tUtACJeWZXmx.mp3"
+const MUSIC_URL =
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Morning-Routine-Lofi-Study-Music%28chosic.com%29-92GYYwByyIUxZlgh93tUtACJeWZXmx.mp3"
 
 export function AudioProvider({ children }: { children: ReactNode }) {
   const audioContextRef = useRef<globalThis.AudioContext | null>(null)

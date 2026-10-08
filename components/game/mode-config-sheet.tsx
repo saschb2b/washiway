@@ -64,7 +64,7 @@ export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40"
+            className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm"
           />
 
           {/* Sheet */}
@@ -76,48 +76,48 @@ export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed inset-x-0 bottom-0 z-50 max-h-[85dvh] overflow-hidden"
           >
-            <div className="bg-paper-alt rounded-t-[1.5rem] shadow-2xl border-t-2 border-border relative">
+            <div className="relative rounded-t-[1.5rem] border-t-2 border-border bg-paper-alt shadow-2xl">
               {/* Paper texture */}
               <div
-                className="absolute inset-0 opacity-[0.02] pointer-events-none rounded-t-[1.5rem]"
+                className="pointer-events-none absolute inset-0 rounded-t-[1.5rem] opacity-[0.02]"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
                 }}
               />
 
               {/* Handle */}
-              <div className="flex justify-center pt-3 pb-2 relative z-10">
-                <div className="w-10 h-1.5 rounded-full bg-border" />
+              <div className="relative z-10 flex justify-center pt-3 pb-2">
+                <div className="h-1.5 w-10 rounded-full bg-border" />
               </div>
 
-              <div className="px-6 pb-8 space-y-5 relative z-10">
+              <div className="relative z-10 space-y-5 px-6 pb-8">
                 {/* Mode Header */}
                 <div className="flex items-center gap-4">
                   <div
                     className={cn(
-                      "w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold",
+                      "flex h-16 w-16 items-center justify-center rounded-xl text-2xl font-bold",
                       modeStyle.color,
-                      "shadow-md border-2 border-white/30",
+                      "border-2 border-white/30 shadow-md",
                     )}
                   >
                     {modeStyle.icon}
                   </div>
                   <div className="flex-1">
                     <h2 className="text-2xl font-bold text-foreground">{modeTranslation.name}</h2>
-                    <p className="text-muted-foreground text-sm">{modeTranslation.description}</p>
+                    <p className="text-sm text-muted-foreground">{modeTranslation.description}</p>
                   </div>
                 </div>
 
                 {/* Best Score as a sticky note */}
                 <div className="flex justify-center">
-                  <StickyNote color="yellow" className="px-6 py-4 inline-block" rotate={-1}>
+                  <StickyNote color="yellow" className="inline-block px-6 py-4" rotate={-1}>
                     <div className="flex flex-col items-center">
                       <LabelSticker className="mb-2">{t.config.yourBest}</LabelSticker>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-bold font-mono text-foreground">{currentBestScore || "—"}</span>
+                        <span className="font-mono text-4xl font-bold text-foreground">{currentBestScore || "—"}</span>
                         {currentBestScore > 0 && <span className="text-sm text-muted-foreground">{t.config.pts}</span>}
                       </div>
-                      <span className="text-xs text-muted-foreground mt-1">({currentDifficulty.label})</span>
+                      <span className="mt-1 text-xs text-muted-foreground">({currentDifficulty.label})</span>
                     </div>
                   </StickyNote>
                 </div>
@@ -130,7 +130,7 @@ export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps
                       key={baseDifficulty}
                       initial={{ scale: 1.2, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className={cn("text-sm font-bold px-3 py-1 rounded-lg", currentDifficulty.color)}
+                      className={cn("rounded-lg px-3 py-1 text-sm font-bold", currentDifficulty.color)}
                     >
                       {currentDifficulty.label}
                     </motion.span>
@@ -147,8 +147,8 @@ export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps
                   />
 
                   {/* Difficulty description */}
-                  <div className="bg-card rounded-lg p-3 border border-border">
-                    <p className="text-xs text-center text-muted-foreground">
+                  <div className="rounded-lg border border-border bg-card p-3">
+                    <p className="text-center text-xs text-muted-foreground">
                       {t.config.difficultyDescriptions[baseDifficulty]}
                     </p>
                   </div>
@@ -162,13 +162,13 @@ export function ModeConfigSheet({ mode, onClose, onStart }: ModeConfigSheetProps
                     play("tap")
                     onStart(displayMode)
                   }}
-                  className="w-full text-xl py-5"
+                  className="w-full py-5 text-xl"
                 >
                   {t.config.startGame}
                 </StickerButton>
 
                 {/* Game info */}
-                <p className="text-xs text-center text-muted-foreground">{t.config.gameInfo}</p>
+                <p className="text-center text-xs text-muted-foreground">{t.config.gameInfo}</p>
               </div>
             </div>
           </motion.div>

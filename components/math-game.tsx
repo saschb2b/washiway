@@ -53,7 +53,7 @@ function MathGameInner() {
   }, [])
 
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="flex min-h-dvh flex-col">
       {gameState === "splash" && <SplashScreen onStart={() => setGameState("menu")} />}
       {gameState === "menu" && <StartScreen onStartGame={startGame} />}
       {gameState === "playing" && <GameScreen mode={selectedMode} onGameEnd={endGame} />}
