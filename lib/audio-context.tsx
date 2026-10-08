@@ -17,18 +17,20 @@ interface AudioContextType {
 
 const AudioContext = createContext<AudioContextType | null>(null)
 
+// Served from public/sounds; the base path is "/washiway" on GitHub Pages.
+const SOUNDS_URL = `${process.env.NEXT_PUBLIC_BASE_PATH}/sounds`
+
 const SOUND_MAP: Record<SoundType, string> = {
-  tap: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton2-AssJOeimOe9HKjOMso8flgDH5M6tJo.wav",
-  correct: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton3-dQSn6KU4ww4XFAe0JXBQjRF7DfZBL9.wav",
-  wrong: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton4-sLwsdiIuwunEgcacIpPrOhZTCTHMUX.wav",
-  streak: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton5-M9As8vAVMgHqR8JPHZBze95jGBCbik.wav",
-  burst: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton5-M9As8vAVMgHqR8JPHZBze95jGBCbik.wav",
-  gameOver: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton4-sLwsdiIuwunEgcacIpPrOhZTCTHMUX.wav",
-  newBest: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SnappyButton5-M9As8vAVMgHqR8JPHZBze95jGBCbik.wav",
+  tap: `${SOUNDS_URL}/tap.wav`,
+  correct: `${SOUNDS_URL}/correct.wav`,
+  wrong: `${SOUNDS_URL}/wrong.wav`,
+  streak: `${SOUNDS_URL}/streak.wav`,
+  burst: `${SOUNDS_URL}/streak.wav`,
+  gameOver: `${SOUNDS_URL}/wrong.wav`,
+  newBest: `${SOUNDS_URL}/streak.wav`,
 }
 
-const MUSIC_URL =
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Morning-Routine-Lofi-Study-Music%28chosic.com%29-92GYYwByyIUxZlgh93tUtACJeWZXmx.mp3"
+const MUSIC_URL = `${SOUNDS_URL}/music.mp3`
 
 export function AudioProvider({ children }: { children: ReactNode }) {
   const audioContextRef = useRef<globalThis.AudioContext | null>(null)

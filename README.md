@@ -81,6 +81,7 @@ To enable deployments on a fresh fork, open **Settings → Pages** and set **Sou
 │   ├── i18n-context.tsx      # Translations
 │   ├── question-generator.ts # Math problem generation
 │   └── game-types.ts         # TypeScript types
+├── public/sounds/            # Sound effects and background music
 └── .github/workflows/        # CI and GitHub Pages deployment
 ```
 
@@ -105,6 +106,10 @@ To enable deployments on a fresh fork, open **Settings → Pages** and set **Sou
 1. Add the locale to the `Language` type in `lib/i18n-context.tsx`
 2. Add a translations object following the existing structure
 3. Add it to `LANGUAGES` in `components/game/language-toggle.tsx`
+
+## Credits
+
+Background music: "Morning Routine" by Ghostrifter Official, via [chosic.com](https://www.chosic.com).
 
 ## License
 
