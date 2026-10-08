@@ -1,24 +1,30 @@
 "use client"
 
-import { motion } from "motion/react"
-import { GAME_DURATION, type GameMode, type GameStats } from "@/lib/game-types"
-import { TruthButtons } from "./inputs/truth-buttons"
-import { CompareButtons } from "./inputs/compare-buttons"
-import { DigitPad } from "./inputs/digit-pad"
-import { MatchButtons } from "./inputs/match-buttons"
+import { useEffect } from "react"
+import { motion, AnimatePresence } from "motion/react"
+import type { GameMode, GameStats } from "@/lib/game-types"
+import type { SessionResult } from "@/lib/skill-context"
 import { GameProvider, useGame } from "@/lib/game-context"
+import { useI18n, useLocalize } from "@/lib/i18n-context"
+import { fmt } from "@/lib/math/format"
+import { TruthButtons } from "./inputs/truth-buttons"
+import { DigitPad } from "./inputs/digit-pad"
+import { ChoiceButtons } from "./inputs/choice-buttons"
+import { NumberLine } from "./inputs/number-line"
+import { TargetTiles } from "./inputs/target-tiles"
 import { TimerRing, StreakDisplay, BurstIndicator, FeedbackOverlay } from "./feedback-overlay"
-import { QuestionCard, QuestionCardGroup } from "./question-card"
+import { QuestionCard } from "./question-card"
 import { PaperBackground } from "@/components/ui/stationery"
 
 interface GameScreenProps {
   mode: GameMode
-  onGameEnd: (stats: GameStats) => void
+  timed: boolean
+  onGameEnd: (stats: GameStats, session: SessionResult) => void
 }
 
-export function GameScreen({ mode, onGameEnd }: GameScreenProps) {
+export function GameScreen({ mode, timed, onGameEnd }: GameScreenProps) {
   return (
-    <GameProvider mode={mode} onGameEnd={onGameEnd} gameDuration={GAME_DURATION}>
+    <GameProvider mode={mode} timed={timed} onGameEnd={onGameEnd}>
       <GameScreenContent />
     </GameProvider>
   )
@@ -74,11 +80,43 @@ function DecoWashiStrips() {
 }
 
 function GameScreenContent() {
-  const { score } = useGame()
+  const { score, question, mode, feedback, transitionPhase, submitAnswer, continueNow } = useGame()
+  const { t } = useI18n()
+  const text = useLocalize()
+  const missed = feedback.outcome === "wrong" || feedback.outcome === "skipped"
+
+  // "?" or Escape means "don't know".
+  useEffect(() => {
+    if (transitionPhase !== "idle") return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "?" || e.key === "Escape") {
+        e.preventDefault()
+        submitAnswer(null)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [transitionPhase, submitAnswer])
+
+  // Enter, Space or a tap moves on from a solution once it has been read.
+  useEffect(() => {
+    if (!missed) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        continueNow()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [missed, continueNow])
 
   return (
     <PaperBackground>
-      <div className="relative flex min-h-dvh flex-1 flex-col overflow-hidden">
+      <div
+        className="relative flex min-h-dvh flex-1 flex-col overflow-hidden"
+        onClick={missed ? continueNow : undefined}
+      >
         <DecoWashiStrips />
 
         <div className="relative mx-3 mt-3">
@@ -90,7 +128,12 @@ function GameScreenContent() {
             }}
           />
           <div className="relative z-10 flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
-            <TimerRing duration={GAME_DURATION} />
+            <TimerRing />
+            {mode === "mix" && (
+              <span className="rounded-full bg-muted px-3 py-1 text-xs font-bold text-muted-foreground">
+                {t.modes[question.skill].name}
+              </span>
+            )}
             <div className="relative z-10 text-right">
               <motion.p
                 key={score}
@@ -104,14 +147,15 @@ function GameScreenContent() {
             </div>
           </div>
         </div>
-        {/* Burst indicator */}
+
         <div className="mt-2 flex justify-center">
           <BurstIndicator />
         </div>
 
-        {/* Question Display */}
-        <FeedbackOverlay className="flex flex-1 items-center justify-center p-4">
-          <ModeQuestionDisplay />
+        <FeedbackOverlay className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
+          <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">{text(question.prompt)}</p>
+          <QuestionCard content={text(question.display)} className="w-full max-w-sm" />
+          <SolutionPanel />
         </FeedbackOverlay>
 
         <div className="relative">
@@ -121,8 +165,20 @@ function GameScreenContent() {
               background: `linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-highlight))`,
             }}
           />
-          <div className="relative z-10 p-4 pb-8">
-            <ModeInput />
+          <div className="relative z-10 space-y-3 p-4 pb-6">
+            <QuestionInput />
+            <div className="flex justify-center">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  submitAnswer(null)
+                }}
+                disabled={transitionPhase !== "idle"}
+                className="rounded-full px-4 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted disabled:opacity-0"
+              >
+                {t.game.skip} <span className="ml-1 rounded bg-black/5 px-1 font-mono text-xs">?</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -130,66 +186,74 @@ function GameScreenContent() {
   )
 }
 
-function ModeQuestionDisplay() {
-  const { mode, question } = useGame()
+// After a miss: the solution and the strategy that gets there.
+function SolutionPanel() {
+  const { question, feedback } = useGame()
+  const { t } = useI18n()
+  const text = useLocalize()
+  const show = feedback.outcome === "wrong" || feedback.outcome === "skipped"
 
-  switch (mode) {
-    case "compare":
-      return (
-        <QuestionCardGroup className="flex w-full max-w-md gap-4">
-          <QuestionCard cardId="left" content={question.display} className="flex-1 px-4 py-10" />
-          <QuestionCard cardId="right" content={question.displaySecondary || ""} className="flex-1 px-4 py-10" />
-        </QuestionCardGroup>
-      )
-
-    case "match":
-      return (
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className="relative overflow-hidden rounded-lg px-5 py-2.5"
-            style={{
-              backgroundColor: "var(--theme-highlight)",
-              opacity: 0.9,
-              backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(255,255,255,0.4) 6px, rgba(255,255,255,0.4) 8px)`,
-            }}
-          >
-            {/* Torn edge effects */}
-            <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-black/[0.06] to-transparent" />
-            <div className="absolute top-0 right-0 bottom-0 w-1 bg-gradient-to-l from-black/[0.06] to-transparent" />
-            <span className="relative z-10 text-lg font-bold text-foreground">{question.display}</span>
-          </div>
-          <p className="text-sm text-muted-foreground">Find the match</p>
-        </div>
-      )
-
-    default:
-      return <QuestionCard content={question.display} secondary={question.displaySecondary} className="min-w-[280px]" />
-  }
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          className="w-full max-w-sm rounded-lg border border-border bg-card/95 px-4 py-3 text-center shadow-sm"
+        >
+          {question.kind === "number" && (
+            <p className="font-mono text-lg font-bold text-foreground">
+              {t.game.solution}: {fmt(question.answer)}
+            </p>
+          )}
+          <p className="mt-1 font-mono text-sm leading-snug text-muted-foreground">{text(question.explanation)}</p>
+          <p className="mt-2 text-xs text-muted-foreground/70">{t.game.tapToContinue}</p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
 
-function ModeInput() {
-  const { mode, submitAnswer, transitionPhase, question } = useGame()
+function QuestionInput() {
+  const { question, submitAnswer, transitionPhase, feedback } = useGame()
   const disabled = transitionPhase !== "idle"
+  const answered = feedback.outcome !== null
 
-  switch (mode) {
-    case "truth":
+  switch (question.kind) {
+    case "truefalse":
       return <TruthButtons onAnswer={submitAnswer} disabled={disabled} />
-    case "compare":
-      return <CompareButtons onAnswer={submitAnswer} disabled={disabled} />
-    case "match":
-      return <MatchButtons options={(question.options as string[]) || []} onAnswer={submitAnswer} disabled={disabled} />
-    case "digit":
-    case "missing":
-    case "combo":
+    case "choice":
       return (
-        <DigitPad
-          key={question.id}
+        <ChoiceButtons
+          options={question.options}
           onAnswer={submitAnswer}
           disabled={disabled}
-          correctAnswer={question.answer as number}
+          chosen={answered ? ((feedback.answer as number | null) ?? null) : undefined}
+          correct={question.answer}
         />
       )
-    default:
-      return null
+    case "number":
+      return <DigitPad key={question.id} onAnswer={submitAnswer} disabled={disabled} correctAnswer={question.answer} />
+    case "line":
+      return (
+        <NumberLine
+          key={question.id}
+          question={question}
+          onAnswer={submitAnswer}
+          disabled={disabled}
+          guess={answered ? ((feedback.answer as number | null) ?? null) : undefined}
+        />
+      )
+    case "target":
+      return (
+        <TargetTiles
+          key={question.id}
+          question={question}
+          onAnswer={submitAnswer}
+          disabled={disabled}
+          chosen={answered ? ((feedback.answer as number[] | null) ?? null) : undefined}
+        />
+      )
   }
 }

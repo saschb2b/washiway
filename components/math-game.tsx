@@ -5,65 +5,50 @@ import { SplashScreen } from "./game/splash-screen"
 import { StartScreen } from "./game/start-screen"
 import { GameScreen } from "./game/game-screen"
 import { ResultsScreen } from "./game/results-screen"
-import { SettingsProvider, useSettings } from "@/lib/settings-context"
+import { SettingsProvider } from "@/lib/settings-context"
 import { AudioProvider } from "@/lib/audio-context"
 import { I18nProvider } from "@/lib/i18n-context"
 import { ProgressionProvider } from "@/lib/progression-context"
 import { ThemeProvider } from "@/lib/theme-context"
+import { type SessionResult, SkillProvider, useSkills } from "@/lib/skill-context"
 import type { GameMode, GameState, GameStats } from "@/lib/game-types"
 
 function MathGameInner() {
   const [gameState, setGameState] = useState<GameState>("splash")
-  const [selectedMode, setSelectedMode] = useState<GameMode>("truth")
-  const [playedDifficulty, setPlayedDifficulty] = useState(2)
-  const { baseDifficulty } = useSettings()
-  const [stats, setStats] = useState<GameStats>({
-    score: 0,
-    streak: 0,
-    maxStreak: 0,
-    correct: 0,
-    incorrect: 0,
-    avgTime: 0,
-  })
+  const [selectedMode, setSelectedMode] = useState<GameMode>("quick")
+  const [timed, setTimed] = useState(true)
+  // Bumped on every start so "play again" remounts a fresh game.
+  const [round, setRound] = useState(0)
+  const [stats, setStats] = useState<GameStats | null>(null)
+  const { commitSession } = useSkills()
 
-  const startGame = useCallback(
-    (mode: GameMode) => {
-      setSelectedMode(mode)
-      setPlayedDifficulty(baseDifficulty) // capture difficulty at game start
-      setStats({
-        score: 0,
-        streak: 0,
-        maxStreak: 0,
-        correct: 0,
-        incorrect: 0,
-        avgTime: 0,
-      })
-      setGameState("playing")
+  const startGame = useCallback((mode: GameMode, isTimed: boolean) => {
+    setSelectedMode(mode)
+    setTimed(isTimed)
+    setRound((r) => r + 1)
+    setGameState("playing")
+  }, [])
+
+  const endGame = useCallback(
+    (finalStats: GameStats, session: SessionResult) => {
+      commitSession(session)
+      setStats(finalStats)
+      setGameState("results")
     },
-    [baseDifficulty],
+    [commitSession],
   )
-
-  const endGame = useCallback((finalStats: GameStats) => {
-    setStats(finalStats)
-    setGameState("results")
-  }, [])
-
-  const returnToMenu = useCallback(() => {
-    setGameState("menu")
-  }, [])
 
   return (
     <div className="flex min-h-dvh flex-col">
       {gameState === "splash" && <SplashScreen onStart={() => setGameState("menu")} />}
       {gameState === "menu" && <StartScreen onStartGame={startGame} />}
-      {gameState === "playing" && <GameScreen mode={selectedMode} onGameEnd={endGame} />}
-      {gameState === "results" && (
+      {gameState === "playing" && <GameScreen key={round} mode={selectedMode} timed={timed} onGameEnd={endGame} />}
+      {gameState === "results" && stats && (
         <ResultsScreen
           stats={stats}
           mode={selectedMode}
-          difficulty={playedDifficulty}
-          onPlayAgain={() => startGame(selectedMode)}
-          onBackToMenu={returnToMenu}
+          onPlayAgain={() => startGame(selectedMode, timed)}
+          onBackToMenu={() => setGameState("menu")}
         />
       )}
     </div>
@@ -75,11 +60,13 @@ export function MathGame() {
     <I18nProvider>
       <AudioProvider>
         <SettingsProvider>
-          <ProgressionProvider>
-            <ThemeProvider>
-              <MathGameInner />
-            </ThemeProvider>
-          </ProgressionProvider>
+          <SkillProvider>
+            <ProgressionProvider>
+              <ThemeProvider>
+                <MathGameInner />
+              </ThemeProvider>
+            </ProgressionProvider>
+          </SkillProvider>
         </SettingsProvider>
       </AudioProvider>
     </I18nProvider>

@@ -3,13 +3,13 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
 import type { GameMode } from "./game-types"
 
-type BestScoreKey = `${GameMode}-${number}`
+// Scores from the old fixed-difficulty modes are not comparable with the
+// adaptive ones, so best scores start fresh under a new key.
+const BEST_SCORES_KEY = "washiway-best-scores-v2"
 
 interface SettingsContextValue {
-  baseDifficulty: number // 1-5 scale
-  setBaseDifficulty: (d: number) => void
-  getBestScore: (mode: GameMode, difficulty: number) => number
-  updateBestScore: (mode: GameMode, difficulty: number, score: number) => void
+  getBestScore: (mode: GameMode) => number
+  updateBestScore: (mode: GameMode, score: number) => void
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null)
@@ -20,42 +20,31 @@ export function useSettings() {
   return ctx
 }
 
-interface SettingsProviderProps {
-  children: ReactNode
-}
-
-export function SettingsProvider({ children }: SettingsProviderProps) {
-  const [baseDifficulty, setBaseDifficulty] = useState(2)
-  const [bestScores, setBestScores] = useState<Record<BestScoreKey, number>>(() => {
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [bestScores, setBestScores] = useState<Partial<Record<GameMode, number>>>(() => {
     if (typeof window === "undefined") return {}
     try {
-      const saved = localStorage.getItem("washiway-best-scores")
+      const saved = localStorage.getItem(BEST_SCORES_KEY)
       return saved ? JSON.parse(saved) : {}
     } catch {
       return {}
     }
   })
 
-  const getBestScore = (mode: GameMode, difficulty: number): number => {
-    const key: BestScoreKey = `${mode}-${difficulty}`
-    return bestScores[key] || 0
-  }
+  const getBestScore = (mode: GameMode): number => bestScores[mode] ?? 0
 
-  const updateBestScore = (mode: GameMode, difficulty: number, score: number) => {
-    const key: BestScoreKey = `${mode}-${difficulty}`
+  const updateBestScore = (mode: GameMode, score: number) => {
     setBestScores((prev) => {
-      if (score > (prev[key] || 0)) {
-        const updated = { ...prev, [key]: score }
-        localStorage.setItem("washiway-best-scores", JSON.stringify(updated))
-        return updated
+      if (score <= (prev[mode] ?? 0)) return prev
+      const updated = { ...prev, [mode]: score }
+      try {
+        localStorage.setItem(BEST_SCORES_KEY, JSON.stringify(updated))
+      } catch {
+        // Storage unavailable: the best score lasts for this visit only.
       }
-      return prev
+      return updated
     })
   }
 
-  return (
-    <SettingsContext.Provider value={{ baseDifficulty, setBaseDifficulty, getBestScore, updateBestScore }}>
-      {children}
-    </SettingsContext.Provider>
-  )
+  return <SettingsContext.Provider value={{ getBestScore, updateBestScore }}>{children}</SettingsContext.Provider>
 }

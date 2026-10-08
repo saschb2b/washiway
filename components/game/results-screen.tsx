@@ -5,25 +5,28 @@ import { motion, AnimatePresence } from "motion/react"
 import type { GameMode, GameStats } from "@/lib/game-types"
 import { useSettings } from "@/lib/settings-context"
 import { useAudio } from "@/lib/audio-context"
-import { useI18n } from "@/lib/i18n-context"
+import { useI18n, useLocalize } from "@/lib/i18n-context"
+import { useSkills } from "@/lib/skill-context"
+import { SKILLS } from "@/lib/math"
 import { useProgression, type WashiRoll } from "@/lib/progression-context"
 import { PaperBackground, StickyNote, StickerButton, LabelSticker, NotebookCard } from "@/components/ui/stationery"
-import { Check, Sparkles, Gift } from "lucide-react"
+import { Check, Sparkles, Gift, ArrowUp, ArrowDown, Minus, BookmarkPlus } from "lucide-react"
 import { TapePatternPreview } from "./washi-binder"
 
 interface ResultsScreenProps {
   stats: GameStats
   mode: GameMode
-  difficulty: number
   onPlayAgain: () => void
   onBackToMenu: () => void
 }
 
-export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMenu }: ResultsScreenProps) {
+export function ResultsScreen({ stats, mode, onPlayAgain, onBackToMenu }: ResultsScreenProps) {
   const { getBestScore, updateBestScore } = useSettings()
   const { play } = useAudio()
   const { t, language } = useI18n()
+  const text = useLocalize()
   const { recordGameResult } = useProgression()
+  const { records } = useSkills()
 
   const [swatchesEarned, setSwatchesEarned] = useState(0)
   const [newUnlocks, setNewUnlocks] = useState<WashiRoll[]>([])
@@ -31,11 +34,13 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
 
   const isDE = language === "de"
   const modeTranslation = t.modes[mode]
-  const accuracy =
-    stats.correct + stats.incorrect > 0 ? Math.round((stats.correct / (stats.correct + stats.incorrect)) * 100) : 0
+  const total = stats.correct + stats.incorrect + stats.skipped
+  const accuracy = total > 0 ? Math.round((stats.correct / total) * 100) : 0
 
-  const currentBest = getBestScore(mode, difficulty)
-  const isNewBest = stats.score > currentBest
+  // Only timed sprints compete for a best score.
+  const currentBest = getBestScore(mode)
+  const isNewBest = stats.timed && stats.score > currentBest
+  const peakLevel = Math.max(...SKILLS.map((s) => records[s].level))
   const processedRef = useRef(false)
 
   useEffect(() => {
@@ -43,7 +48,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
     processedRef.current = true
 
     // Record to progression system
-    const result = recordGameResult(mode, stats.correct, stats.correct + stats.incorrect, stats.maxStreak)
+    const result = recordGameResult(mode, stats.correct, total, stats.maxStreak, peakLevel)
     setSwatchesEarned(result.swatchesEarned)
     setNewUnlocks(result.newUnlocks)
 
@@ -57,14 +62,18 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
       setTimeout(() => setShowUnlockModal(true), 1200)
     }
 
-    updateBestScore(mode, difficulty, stats.score)
-  }, [mode, difficulty, stats, updateBestScore, isNewBest, play, recordGameResult])
+    if (stats.timed) updateBestScore(mode, stats.score)
+  }, [mode, stats, total, peakLevel, updateBestScore, isNewBest, play, recordGameResult])
 
   const statItems = [
     { label: t.results.bestStreak, value: stats.maxStreak, cssVar: "--theme-primary" },
     { label: t.results.accuracy, value: `${accuracy}%`, cssVar: "--theme-secondary" },
     { label: t.results.correct, value: stats.correct, cssVar: "--theme-highlight" },
-    { label: t.results.avgTime, value: `${stats.avgTime}ms`, cssVar: "--theme-muted" },
+    {
+      label: t.results.avgTime,
+      value: stats.avgTime > 0 ? text(`${(stats.avgTime / 1000).toFixed(1)} s`) : "—",
+      cssVar: "--theme-muted",
+    },
   ]
 
   return (
@@ -108,7 +117,7 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
             className="absolute -top-3 left-1/2 h-4 w-24 -translate-x-1/2 -rotate-2 transform rounded-sm"
             style={{ backgroundColor: "var(--theme-primary)", opacity: 0.6 }}
           />
-          <LabelSticker className="mb-2">{t.results.gameOver}</LabelSticker>
+          <LabelSticker className="mb-2">{stats.timed ? t.results.gameOver : t.results.practiceDone}</LabelSticker>
           <h2 className="mt-2 text-2xl font-bold text-foreground">{modeTranslation.name}</h2>
         </motion.div>
 
@@ -189,6 +198,42 @@ export function ResultsScreen({ stats, mode, difficulty, onPlayAgain, onBackToMe
             </div>
           </NotebookCard>
         </motion.div>
+
+        {/* Level changes per skill */}
+        {stats.levelChanges.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="z-10 w-full max-w-xs rounded-lg border border-border bg-card p-3 shadow-sm"
+          >
+            <LabelSticker className="mb-2">{t.results.levels}</LabelSticker>
+            <div className="space-y-1.5">
+              {stats.levelChanges.map(({ skill, from, to }) => {
+                const delta = to - from
+                const Icon = delta > 0.05 ? ArrowUp : delta < -0.05 ? ArrowDown : Minus
+                return (
+                  <div key={skill} className="flex items-center gap-2 text-sm">
+                    <span className="flex-1 truncate text-muted-foreground">{t.modes[skill].name}</span>
+                    <span className="font-mono text-foreground/60">{text(from.toFixed(1))}</span>
+                    <Icon
+                      className={
+                        delta > 0.05 ? "h-4 w-4 text-emerald-600" : delta < -0.05 ? "h-4 w-4 text-rose-500" : "h-4 w-4"
+                      }
+                    />
+                    <span className="font-mono font-bold text-foreground">{text(to.toFixed(1))}</span>
+                  </div>
+                )
+              })}
+            </div>
+            {stats.reviewSaved > 0 && (
+              <p className="mt-2 flex items-center gap-1.5 border-t border-border pt-2 text-xs text-muted-foreground">
+                <BookmarkPlus className="h-3.5 w-3.5" />
+                {t.results.reviewSaved(stats.reviewSaved)}
+              </p>
+            )}
+          </motion.div>
+        )}
 
         {/* Streak Badge */}
         {stats.maxStreak >= 10 && (

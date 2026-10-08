@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
+import { useI18n } from "@/lib/i18n-context"
 
 interface DigitPadProps {
   onAnswer: (answer: number) => void
@@ -12,6 +13,7 @@ interface DigitPadProps {
 
 // Rendered with key={question.id}, so every question starts from a fresh pad.
 export function DigitPad({ onAnswer, disabled, correctAnswer }: DigitPadProps) {
+  const { t } = useI18n()
   const [input, setInput] = useState("")
   const [isNegative, setIsNegative] = useState(false)
 
@@ -153,7 +155,7 @@ export function DigitPad({ onAnswer, disabled, correctAnswer }: DigitPadProps) {
           </motion.button>
         ))}
       </div>
-      <p className="text-center text-xs text-muted-foreground">Use keyboard: 0-9, Backspace, +/-</p>
+      <p className="hidden text-center text-xs text-muted-foreground md:block">{t.game.keypadHint}</p>
     </div>
   )
 }

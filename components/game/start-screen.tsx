@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { motion } from "motion/react"
-import type { GameMode } from "@/lib/game-types"
+import { GAME_MODES, type GameMode } from "@/lib/math"
+import { MODE_STYLES } from "./mode-styles"
 import { ModeConfigSheet } from "./mode-config-sheet"
 import { WashiBinder } from "./washi-binder"
 import { useAudio } from "@/lib/audio-context"
@@ -12,25 +13,7 @@ import { Volume2, VolumeX, ChevronRight, BookOpen } from "lucide-react"
 import { PaperBackground, WashiwayLogo, WashiTapeStrip } from "@/components/ui/stationery"
 
 interface StartScreenProps {
-  onStartGame: (mode: GameMode) => void
-}
-
-const MODE_IDS: GameMode[] = ["truth", "compare", "digit", "missing", "combo", "match"]
-
-const MODE_STYLES: Record<
-  GameMode,
-  {
-    color: "mint" | "pink" | "blue" | "peach" | "lavender" | "yellow"
-    pattern: "dots" | "stripes" | "dashes" | "zigzag"
-    icon: string
-  }
-> = {
-  truth: { color: "blue", pattern: "dots", icon: "?" },
-  compare: { color: "peach", pattern: "stripes", icon: "⟷" },
-  digit: { color: "mint", pattern: "dashes", icon: "#" },
-  missing: { color: "pink", pattern: "zigzag", icon: "_" },
-  combo: { color: "lavender", pattern: "dots", icon: "★" },
-  match: { color: "yellow", pattern: "stripes", icon: "≡" },
+  onStartGame: (mode: GameMode, timed: boolean) => void
 }
 
 export function StartScreen({ onStartGame }: StartScreenProps) {
@@ -139,9 +122,9 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="z-10 w-full max-w-sm space-y-3"
+          className="z-10 w-full max-w-sm space-y-2.5"
         >
-          <div className="mb-4 flex items-center gap-3">
+          <div className="mb-3 flex items-center gap-3">
             <div
               className="h-2 flex-1 rounded-sm"
               style={{
@@ -163,7 +146,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
             />
           </div>
 
-          {MODE_IDS.map((modeId, index) => {
+          {GAME_MODES.map((modeId, index) => {
             const modeTranslation = t.modes[modeId]
             const style = MODE_STYLES[modeId]
             return (
@@ -181,7 +164,7 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
                     setSelectedMode(modeId)
                   }}
                 >
-                  <div className="flex items-center gap-3 p-3.5">
+                  <div className="flex items-center gap-3 px-3.5 py-2.5">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full border border-black/[0.06] bg-white/80 text-base font-bold text-foreground/80 shadow-sm">
                       {style.icon}
                     </div>
@@ -202,9 +185,9 @@ export function StartScreen({ onStartGame }: StartScreenProps) {
         <ModeConfigSheet
           mode={selectedMode}
           onClose={() => setSelectedMode(null)}
-          onStart={(mode) => {
+          onStart={(mode, timed) => {
             setSelectedMode(null)
-            onStartGame(mode)
+            onStartGame(mode, timed)
           }}
         />
 

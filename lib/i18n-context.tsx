@@ -1,53 +1,48 @@
 "use client"
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useSyncExternalStore, type ReactNode } from "react"
+import { type GameMode, type Language, localize, type Text } from "./math"
 
-export type Language = "en" | "de"
+export type { Language } from "./math"
+
+interface ModeText {
+  name: string
+  description: string
+  // What practising this mode builds, in one honest sentence.
+  trains: string
+}
 
 interface Translations {
-  // Splash screen
   splash: {
     tagline: string
     tapToStart: string
   }
-  // Main menu
   menu: {
     chooseMode: string
-    streakHint: string
   }
-  // Mode names and descriptions
-  modes: {
-    truth: { name: string; description: string }
-    compare: { name: string; description: string }
-    digit: { name: string; description: string }
-    missing: { name: string; description: string }
-    combo: { name: string; description: string }
-    match: { name: string; description: string }
-  }
-  // Mode config sheet
+  modes: Record<GameMode, ModeText>
   config: {
     yourBest: string
     pts: string
-    difficulty: string
+    level: string
+    levelHint: string
+    yourLevels: string
     startGame: string
-    gameInfo: string
-    difficultyDescriptions: Record<number, string>
+    timed: string
+    untimed: string
+    infoTimed: string
+    infoUntimed: string
   }
-  // Difficulty labels
-  difficulty: {
-    chill: string
-    easy: string
-    medium: string
-    hard: string
-    expert: string
-  }
-  // Game screen
   game: {
     burst: string
+    skip: string
+    tapToContinue: string
+    solution: string
+    keypadHint: string
   }
-  // Results screen
   results: {
     gameOver: string
+    practiceDone: string
     points: string
     newBest: string
     bestStreak: string
@@ -57,21 +52,12 @@ interface Translations {
     streak: string
     playAgain: string
     changeMode: string
+    levels: string
+    reviewSaved: (count: number) => string
   }
-  // Inputs
   inputs: {
     true: string
     false: string
-    left: string
-    right: string
-  }
-  // Binder translations
-  binder: {
-    title: string
-    rolls: string
-    achievements: string
-    swatches: string
-    unlockNew: string
   }
 }
 
@@ -83,42 +69,67 @@ const translations: Record<Language, Translations> = {
     },
     menu: {
       chooseMode: "Pick a pattern",
-      streakHint: "Stick with the streak",
     },
     modes: {
-      truth: { name: "True or False", description: "Is the equation correct?" },
-      compare: { name: "Pick the Bigger", description: "Which side is larger?" },
-      digit: { name: "Quick Solve", description: "Type the answer" },
-      missing: { name: "Find the Blank", description: "What number is missing?" },
-      combo: { name: "Chain Mode", description: "Answers link together" },
-      match: { name: "Tape Match", description: "Match the pattern rule" },
+      quick: {
+        name: "Quick Math",
+        description: "Type the answer",
+        trains: "Fluent arithmetic and the shortcuts behind it: compensating, near squares, ×11, percentages.",
+      },
+      check: {
+        name: "Fact or Fib",
+        description: "Spot the mistake",
+        trains: "Checking results fast — last digit, odd or even, rough size, working backwards — and classic traps.",
+      },
+      estimate: {
+        name: "Ballpark",
+        description: "Estimate and compare",
+        trains:
+          "Number sense for everyday life: rounding, orders of magnitude, fractions vs. decimals, percent changes.",
+      },
+      line: {
+        name: "Number Line",
+        description: "Place the number",
+        trains: "A precise feel for where numbers live, fractions and decimals included.",
+      },
+      gap: {
+        name: "Fill the Gap",
+        description: "Find the missing number",
+        trains: "Inverse operations, the equals sign as a balance, number patterns and first steps in algebra.",
+      },
+      target: {
+        name: "Make the Target",
+        description: "Combine tiles to hit it",
+        trains: "Seeing number relationships at a glance: bonds to 10, 100 and 1, factor pairs, differences.",
+      },
+      mix: {
+        name: "Mixed Bag",
+        description: "Every skill, interleaved",
+        trains: "Switching task types makes you pick the right approach each time — practice that sticks longer.",
+      },
     },
     config: {
       yourBest: "Your Best",
       pts: "pts",
-      difficulty: "Difficulty",
+      level: "Level",
+      levelHint: "Adapts to you after every answer",
+      yourLevels: "Your levels",
       startGame: "Let's Go!",
-      gameInfo: "60 seconds • Build streaks for bonus points",
-      difficultyDescriptions: {
-        1: "Single-digit addition only. Perfect for warming up.",
-        2: "Simple addition and subtraction with small numbers.",
-        3: "Mixed operations including multiplication.",
-        4: "Larger numbers and trickier calculations.",
-        5: "Multi-digit operations. True mental math challenge!",
-      },
-    },
-    difficulty: {
-      chill: "Chill",
-      easy: "Easy",
-      medium: "Medium",
-      hard: "Hard",
-      expert: "Expert",
+      timed: "60 s sprint",
+      untimed: "20 tasks, no clock",
+      infoTimed: "Fast and right scores most · quick guesses cost points",
+      infoUntimed: "Take your time · your level still adapts",
     },
     game: {
       burst: "BURST!",
+      skip: "Don't know",
+      tapToContinue: "Tap to continue",
+      solution: "Solution",
+      keypadHint: "Keys: 0–9, Backspace, − for negative",
     },
     results: {
       gameOver: "Session Complete",
+      practiceDone: "Practice Complete",
       points: "points",
       newBest: "New Best!",
       bestStreak: "Best Streak",
@@ -128,19 +139,12 @@ const translations: Record<Language, Translations> = {
       streak: "Streak!",
       playAgain: "Again!",
       changeMode: "Menu",
+      levels: "Levels",
+      reviewSaved: (count) => (count === 1 ? "1 task saved for review" : `${count} tasks saved for review`),
     },
     inputs: {
       true: "TRUE",
       false: "FALSE",
-      left: "LEFT",
-      right: "RIGHT",
-    },
-    binder: {
-      title: "My Washi Binder",
-      rolls: "Tape Rolls",
-      achievements: "Achievements",
-      swatches: "Swatches",
-      unlockNew: "New roll unlocked!",
     },
   },
   de: {
@@ -150,42 +154,68 @@ const translations: Record<Language, Translations> = {
     },
     menu: {
       chooseMode: "Wähle ein Muster",
-      streakHint: "Bleib an der Serie dran",
     },
     modes: {
-      truth: { name: "Wahr oder Falsch", description: "Stimmt die Gleichung?" },
-      compare: { name: "Finde das Größere", description: "Welche Seite ist größer?" },
-      digit: { name: "Schnell Lösen", description: "Tippe die Antwort" },
-      missing: { name: "Finde die Lücke", description: "Welche Zahl fehlt?" },
-      combo: { name: "Ketten-Modus", description: "Antworten verknüpfen sich" },
-      match: { name: "Tape Match", description: "Finde die passende Regel" },
+      quick: {
+        name: "Kopfrechnen",
+        description: "Tippe das Ergebnis",
+        trains: "Sicheres Rechnen und die Tricks dahinter: Ausgleichen, Quadratzahlen, ×11, Prozente.",
+      },
+      check: {
+        name: "Stimmt's?",
+        description: "Finde den Fehler",
+        trains:
+          "Ergebnisse schnell prüfen – Endziffer, gerade oder ungerade, Größenordnung, Rückwärtsrechnen – und typische Denkfallen.",
+      },
+      estimate: {
+        name: "Überschlag",
+        description: "Schätzen und vergleichen",
+        trains: "Zahlengefühl für den Alltag: Runden, Größenordnungen, Brüche vs. Dezimalzahlen, Prozentänderungen.",
+      },
+      line: {
+        name: "Zahlenstrahl",
+        description: "Platziere die Zahl",
+        trains: "Ein genaues Gefühl dafür, wo Zahlen liegen – auch Brüche und Dezimalzahlen.",
+      },
+      gap: {
+        name: "Lückenrechnen",
+        description: "Finde die fehlende Zahl",
+        trains: "Umkehraufgaben, das Gleichheitszeichen als Waage, Zahlenmuster und erste Schritte in Algebra.",
+      },
+      target: {
+        name: "Zielzahl",
+        description: "Kombiniere die Kärtchen",
+        trains: "Zahlbeziehungen auf einen Blick: Ergänzen zu 10, 100 und 1, Faktorpaare, Differenzen.",
+      },
+      mix: {
+        name: "Gemischt",
+        description: "Alle Fertigkeiten im Wechsel",
+        trains:
+          "Wechselnde Aufgabentypen zwingen dich, jedes Mal den passenden Weg zu wählen – das bleibt länger hängen.",
+      },
     },
     config: {
       yourBest: "Dein Bestes",
       pts: "Pkt",
-      difficulty: "Schwierigkeit",
+      level: "Level",
+      levelHint: "Passt sich nach jeder Antwort an dich an",
+      yourLevels: "Deine Level",
       startGame: "Los geht's!",
-      gameInfo: "60 Sekunden • Baue Serien für Bonuspunkte",
-      difficultyDescriptions: {
-        1: "Nur einstellige Addition. Perfekt zum Aufwärmen.",
-        2: "Einfache Addition und Subtraktion mit kleinen Zahlen.",
-        3: "Gemischte Operationen inklusive Multiplikation.",
-        4: "Größere Zahlen und kniffligere Berechnungen.",
-        5: "Mehrstellige Operationen. Echte Kopfrechnen-Herausforderung!",
-      },
-    },
-    difficulty: {
-      chill: "Locker",
-      easy: "Leicht",
-      medium: "Mittel",
-      hard: "Schwer",
-      expert: "Experte",
+      timed: "60-s-Sprint",
+      untimed: "20 Aufgaben, ohne Uhr",
+      infoTimed: "Schnell und richtig bringt am meisten · schnelles Raten kostet Punkte",
+      infoUntimed: "Lass dir Zeit · dein Level passt sich trotzdem an",
     },
     game: {
       burst: "BURST!",
+      skip: "Weiß nicht",
+      tapToContinue: "Tippen zum Weiter",
+      solution: "Lösung",
+      keypadHint: "Tasten: 0–9, Rücktaste, − für negativ",
     },
     results: {
       gameOver: "Session beendet",
+      practiceDone: "Übung beendet",
       points: "Punkte",
       newBest: "Neuer Rekord!",
       bestStreak: "Beste Serie",
@@ -195,21 +225,35 @@ const translations: Record<Language, Translations> = {
       streak: "Serie!",
       playAgain: "Nochmal!",
       changeMode: "Menü",
+      levels: "Level",
+      reviewSaved: (count) =>
+        count === 1 ? "1 Aufgabe zum Wiederholen gemerkt" : `${count} Aufgaben zum Wiederholen gemerkt`,
     },
     inputs: {
       true: "WAHR",
       false: "FALSCH",
-      left: "LINKS",
-      right: "RECHTS",
-    },
-    binder: {
-      title: "Mein Washi Binder",
-      rolls: "Tape Rollen",
-      achievements: "Erfolge",
-      swatches: "Swatches",
-      unlockNew: "Neue Rolle freigeschaltet!",
     },
   },
+}
+
+const LANGUAGE_KEY = "washiway-language"
+const listeners = new Set<() => void>()
+let chosen: Language | null = null
+
+function readLanguage(): Language {
+  if (chosen) return chosen
+  try {
+    const saved = localStorage.getItem(LANGUAGE_KEY)
+    if (saved === "en" || saved === "de") return saved
+  } catch {
+    // Fall through to the browser language.
+  }
+  return navigator.language.toLowerCase().startsWith("de") ? "de" : "en"
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  return () => listeners.delete(listener)
 }
 
 interface I18nContextType {
@@ -221,10 +265,19 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en")
+  // The static export renders English; the browser then switches to the
+  // saved or preferred language.
+  const language = useSyncExternalStore(subscribe, readLanguage, () => "en" as Language)
 
   const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang)
+    chosen = lang
+    try {
+      localStorage.setItem(LANGUAGE_KEY, lang)
+    } catch {
+      // Not persisted; still switch for this visit.
+    }
+    document.documentElement.lang = lang
+    listeners.forEach((listener) => listener())
   }, [])
 
   return (
@@ -238,4 +291,10 @@ export function useI18n() {
     throw new Error("useI18n must be used within I18nProvider")
   }
   return context
+}
+
+// Turns generated math text into the current language (incl. decimal commas).
+export function useLocalize() {
+  const { language } = useI18n()
+  return useCallback((text: Text) => localize(text, language), [language])
 }

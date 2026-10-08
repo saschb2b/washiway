@@ -1,55 +1,41 @@
 "use client"
 
-import type React from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 import { useGame } from "@/lib/game-context"
 import { ScorePopup } from "./feedback-overlay"
 
 interface QuestionCardProps {
-  cardId?: "left" | "right" | "single"
   content: string
-  secondary?: string
   className?: string
 }
 
-export function QuestionCard({ cardId = "single", content, secondary, className }: QuestionCardProps) {
+// Long expressions (chains, sequences) get a smaller type size so they fit.
+function sizeFor(content: string): string {
+  const length = content.length
+  if (length <= 12) return "text-4xl md:text-5xl"
+  if (length <= 16) return "text-3xl md:text-4xl"
+  if (length <= 22) return "text-2xl md:text-3xl"
+  return "text-xl md:text-2xl"
+}
+
+export function QuestionCard({ content, className }: QuestionCardProps) {
   const { feedback, question, transitionPhase } = useGame()
 
-  const isChosen = feedback.chosenValue === cardId || (cardId === "single" && feedback.type !== null)
-  const isCorrectAnswer = feedback.correctValue === cardId
-  const showCorrectHighlight = feedback.type === "wrong" && isCorrectAnswer
-  const showChosenCorrect = feedback.type === "correct" && isChosen
-  const showChosenWrong = feedback.type === "wrong" && isChosen
-
+  const isCorrect = feedback.outcome === "correct"
+  const isMiss = feedback.outcome === "wrong" || feedback.outcome === "skipped"
   const isExiting = transitionPhase === "transitioning"
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={`${cardId}-${question.id}`}
-        initial={{
-          opacity: 0,
-          x: cardId === "left" ? -20 : cardId === "right" ? 20 : 0,
-          y: cardId === "single" ? 20 : 0,
-          scale: 0.95,
-        }}
-        animate={{
-          opacity: isExiting ? 0 : 1,
-          x: 0,
-          y: isExiting ? -20 : 0,
-          scale: isExiting ? 0.95 : 1,
-        }}
-        transition={{
-          duration: 0.25,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
+        key={question.id}
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: isExiting ? 0 : 1, y: isExiting ? -20 : 0, scale: isExiting ? 0.95 : 1 }}
+        transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
         className={cn(
-          "rounded-xl px-10 py-8",
-          "border border-border bg-card",
-          "shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
-          "flex flex-col items-center justify-center",
-          "relative overflow-hidden",
+          "relative flex flex-col items-center justify-center overflow-hidden rounded-xl px-6 py-7",
+          "border border-border bg-card shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
           className,
         )}
       >
@@ -60,76 +46,39 @@ export function QuestionCard({ cardId = "single", content, secondary, className 
           }}
         />
 
-        {/* Subtle ruled lines for index card feel */}
+        {/* Ruled lines for an index card feel */}
         <div
           className="pointer-events-none absolute inset-x-6 top-6 bottom-6 opacity-15"
           style={{
-            backgroundImage: `repeating-linear-gradient(
-              transparent, transparent 26px,
-              var(--border) 26px, var(--border) 27px
-            )`,
+            backgroundImage: `repeating-linear-gradient(transparent, transparent 26px, var(--border) 26px, var(--border) 27px)`,
           }}
         />
 
-        {/* Feedback highlight */}
-        <motion.div
-          className={cn(
-            "absolute inset-0 rounded-xl",
-            showChosenCorrect && "bg-success/15",
-            showChosenWrong && "bg-destructive/15",
-            showCorrectHighlight && "bg-success/15",
-          )}
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: showChosenCorrect || showChosenWrong || showCorrectHighlight ? 1 : 0,
-          }}
-          transition={{ duration: 0.15 }}
-        />
-
-        {/* Border feedback */}
         <motion.div
           className={cn(
             "absolute inset-0 rounded-xl border-4",
-            showChosenCorrect && "border-success",
-            showChosenWrong && "border-destructive",
-            showCorrectHighlight && "border-success",
-            !showChosenCorrect && !showChosenWrong && !showCorrectHighlight && "border-transparent",
+            isCorrect && "border-success bg-success/15",
+            isMiss && "border-destructive bg-destructive/10",
+            !isCorrect && !isMiss && "border-transparent",
           )}
-          initial={{ scale: 1.05, opacity: 0 }}
-          animate={{
-            scale: showChosenCorrect || showChosenWrong || showCorrectHighlight ? 1 : 1.05,
-            opacity: showChosenCorrect || showChosenWrong || showCorrectHighlight ? 1 : 0,
-          }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          initial={false}
+          animate={{ opacity: isCorrect || isMiss ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
         />
 
-        <motion.div
-          className="relative z-10 flex flex-col items-center justify-center"
-          animate={{
-            scale: showChosenCorrect ? [1, 1.05, 1] : showChosenWrong ? [1, 0.98, 1, 0.98, 1] : 1,
-          }}
-          transition={{
-            duration: showChosenWrong ? 0.4 : 0.3,
-            ease: "easeInOut",
-          }}
+        <motion.p
+          className={cn(
+            "relative z-10 text-center font-mono font-bold tracking-wide break-words text-card-foreground",
+            sizeFor(content),
+          )}
+          animate={{ scale: isCorrect ? [1, 1.05, 1] : isMiss ? [1, 0.98, 1, 0.98, 1] : 1 }}
+          transition={{ duration: isMiss ? 0.4 : 0.3, ease: "easeInOut" }}
         >
-          <p className="text-center font-mono text-4xl font-bold tracking-wide text-card-foreground md:text-5xl">
-            {content}
-          </p>
-          {secondary && <p className="mt-4 text-center font-mono text-2xl text-muted-foreground">{secondary}</p>}
-        </motion.div>
+          {content}
+        </motion.p>
 
-        {cardId === "single" && <ScorePopup className="top-0 left-1/2 -translate-x-1/2" />}
+        <ScorePopup className="top-0 left-1/2 -translate-x-1/2" />
       </motion.div>
     </AnimatePresence>
-  )
-}
-
-export function QuestionCardGroup({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={cn("relative", className)}>
-      {children}
-      <ScorePopup className="top-1/4 left-1/2 -translate-x-1/2 text-2xl" />
-    </div>
   )
 }

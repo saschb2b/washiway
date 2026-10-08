@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 import { useGame } from "@/lib/game-context"
 import { useI18n } from "@/lib/i18n-context"
+import { GAME_DURATION, PRACTICE_LENGTH } from "@/lib/game-types"
 
 interface FeedbackOverlayProps {
   children: React.ReactNode
@@ -20,7 +21,7 @@ export function FeedbackOverlay({ children, className }: FeedbackOverlayProps) {
       {children}
 
       <AnimatePresence>
-        {feedback.type && (
+        {feedback.outcome && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -28,7 +29,7 @@ export function FeedbackOverlay({ children, className }: FeedbackOverlayProps) {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={cn(
               "pointer-events-none absolute inset-0 rounded-3xl",
-              feedback.type === "correct" ? "bg-success/8" : "bg-destructive/8",
+              feedback.outcome === "correct" ? "bg-success/8" : "bg-destructive/8",
             )}
           />
         )}
@@ -42,7 +43,7 @@ export function ScorePopup({ className }: { className?: string }) {
 
   return (
     <AnimatePresence>
-      {feedback.type === "correct" && feedback.points && (
+      {feedback.outcome && !!feedback.points && (
         <motion.div
           initial={{ opacity: 0, y: 10, scale: 0.8 }}
           animate={{ opacity: 1, y: -30, scale: 1 }}
@@ -51,9 +52,13 @@ export function ScorePopup({ className }: { className?: string }) {
             duration: 0.5,
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
-          className={cn("pointer-events-none absolute z-20 text-xl font-bold text-success", className)}
+          className={cn(
+            "pointer-events-none absolute z-20 text-xl font-bold",
+            feedback.points > 0 ? "text-emerald-600" : "text-rose-500",
+            className,
+          )}
         >
-          +{feedback.points}
+          {feedback.points > 0 ? `+${feedback.points}` : `−${Math.abs(feedback.points)}`}
         </motion.div>
       )}
     </AnimatePresence>
@@ -128,13 +133,13 @@ export function StreakDisplay() {
   )
 }
 
-// Timer ring component
-export function TimerRing({ duration = 60 }: { duration?: number }) {
-  const { timeLeft } = useGame()
+// Time left in a sprint, or tasks done in an untimed practice round.
+export function TimerRing() {
+  const { timeLeft, timed, answered } = useGame()
 
-  const timerPercentage = (timeLeft / duration) * 100
-  const isTimerLow = timeLeft <= 10
-  const isTimerCritical = timeLeft <= 5
+  const share = timed ? timeLeft / GAME_DURATION : 1 - answered / PRACTICE_LENGTH
+  const isTimerLow = timed && timeLeft <= 10
+  const isTimerCritical = timed && timeLeft <= 5
 
   return (
     <div className="relative h-12 w-12">
@@ -155,13 +160,19 @@ export function TimerRing({ duration = 60 }: { duration?: number }) {
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray="97.5"
-          animate={{ strokeDashoffset: 97.5 - (timerPercentage / 100) * 97.5 }}
+          animate={{ strokeDashoffset: 97.5 - share * 97.5 }}
           transition={{ duration: 0.5, ease: "linear" }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={cn("font-mono text-base font-bold", isTimerCritical && "animate-pulse text-destructive")}>
-          {timeLeft}
+        <span
+          className={cn(
+            "font-mono font-bold",
+            timed ? "text-base" : "text-xs",
+            isTimerCritical && "animate-pulse text-destructive",
+          )}
+        >
+          {timed ? timeLeft : `${answered}/${PRACTICE_LENGTH}`}
         </span>
       </div>
     </div>

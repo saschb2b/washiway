@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, type ReactNode } from "react"
-import type { GameMode } from "./game-types"
+import { GAME_MODES, type GameMode } from "./math"
 
 export interface WashiRoll {
   id: string
@@ -24,9 +24,8 @@ export interface Achievement {
   nameDE: string
   description: string
   descriptionDE: string
-  type: "totalAnswers" | "streak" | "accuracy" | "gamesPlayed" | "perfectRun" | "modeSpecific"
+  type: "totalAnswers" | "streak" | "accuracy" | "gamesPlayed" | "perfectRun" | "level"
   target: number
-  mode?: GameMode
 }
 
 export const WASHI_ROLLS: WashiRoll[] = [
@@ -240,6 +239,27 @@ export const WASHI_ROLLS: WashiRoll[] = [
       target: 50,
     },
   },
+  {
+    id: "lucky-stars",
+    name: "Lucky Stars",
+    nameDE: "Glückssterne",
+    pattern: "stars",
+    colors: {
+      primary: "oklch(0.95 0.06 95)",
+      secondary: "oklch(0.62 0.13 80)",
+      highlight: "oklch(0.88 0.12 95)",
+      muted: "oklch(0.97 0.025 95)",
+    },
+    unlockRequirement: {
+      id: "level6",
+      name: "Rising Star",
+      nameDE: "Aufsteiger",
+      description: "Reach level 6 in any skill",
+      descriptionDE: "Erreiche Level 6 in einer Fertigkeit",
+      type: "level",
+      target: 6,
+    },
+  },
 ]
 
 // All achievements (derived from rolls + extra)
@@ -252,7 +272,7 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     description: "Play all game modes",
     descriptionDE: "Spiele alle Spielmodi",
     type: "gamesPlayed",
-    target: 6,
+    target: GAME_MODES.length,
   },
 ]
 
@@ -264,6 +284,8 @@ interface ProgressionStats {
   perfectRuns: number
   accurateRuns: number // runs with 85%+ accuracy
   modesPlayed: GameMode[]
+  // Highest skill level ever reached, in whole levels.
+  peakLevel: number
 }
 
 interface ProgressionContextValue {
@@ -293,6 +315,7 @@ interface ProgressionContextValue {
     correct: number,
     total: number,
     maxStreak: number,
+    peakLevel: number,
   ) => {
     swatchesEarned: number
     newUnlocks: WashiRoll[]
@@ -315,6 +338,7 @@ const DEFAULT_STATS: ProgressionStats = {
   perfectRuns: 0,
   accurateRuns: 0,
   modesPlayed: [],
+  peakLevel: 1,
 }
 
 export function ProgressionProvider({ children }: { children: ReactNode }) {
@@ -324,7 +348,13 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
       const saved = localStorage.getItem("washiway-progression")
       if (saved) {
         const data = JSON.parse(saved)
-        return data.stats || DEFAULT_STATS
+        if (!data.stats) return DEFAULT_STATS
+        // Older saves know other mode names and no peak level.
+        return {
+          ...DEFAULT_STATS,
+          ...data.stats,
+          modesPlayed: (data.stats.modesPlayed ?? []).filter((m: GameMode) => GAME_MODES.includes(m)),
+        }
       }
     } catch {}
     return DEFAULT_STATS
@@ -399,6 +429,9 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
       case "perfectRun":
         current = stats.perfectRuns
         break
+      case "level":
+        current = stats.peakLevel
+        break
     }
     return {
       current,
@@ -429,13 +462,16 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
         case "perfectRun":
           met = newStats.perfectRuns >= req.target
           break
+        case "level":
+          met = newStats.peakLevel >= req.target
+          break
       }
       if (met) newUnlocks.push(roll)
     }
     return newUnlocks
   }
 
-  const recordGameResult = (mode: GameMode, correct: number, total: number, maxStreak: number) => {
+  const recordGameResult = (mode: GameMode, correct: number, total: number, maxStreak: number, peakLevel: number) => {
     const accuracy = total > 0 ? correct / total : 0
     const isPerfect = total > 0 && correct === total
     const isAccurate = accuracy >= 0.85
@@ -448,6 +484,7 @@ export function ProgressionProvider({ children }: { children: ReactNode }) {
       perfectRuns: stats.perfectRuns + (isPerfect ? 1 : 0),
       accurateRuns: stats.accurateRuns + (isAccurate ? 1 : 0),
       modesPlayed: stats.modesPlayed.includes(mode) ? stats.modesPlayed : [...stats.modesPlayed, mode],
+      peakLevel: Math.max(stats.peakLevel, Math.floor(peakLevel)),
     }
 
     const swatchesEarned = correct + Math.floor(maxStreak / 5) * 2
