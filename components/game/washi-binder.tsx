@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import { X, Lock, Check, Sparkles } from "lucide-react"
 import {
   useProgression,

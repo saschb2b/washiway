@@ -1,7 +1,6 @@
-import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Nunito, JetBrains_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import type { ReactNode } from "react"
+import { JetBrains_Mono, Nunito } from "next/font/google"
 import "./globals.css"
 
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" })
@@ -13,7 +12,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Washiway",
   description: "Find your flow. A cozy 60-second math sprint.",
-    generator: 'v0.app'
+  applicationName: "Washiway",
 }
 
 export const viewport: Viewport = {
@@ -21,17 +20,10 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${nunito.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        {children}
-        <Analytics />
-      </body>
+    <html lang="en" className={`${nunito.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   )
 }

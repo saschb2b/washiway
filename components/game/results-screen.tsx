@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import type { GameMode, GameStats } from "@/lib/game-types"
 import { useSettings } from "@/lib/settings-context"
 import { useAudio } from "@/lib/audio-context"

@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { GAME_DURATION, type GameMode, type GameStats } from "@/lib/game-types"
 import { TruthButtons } from "./inputs/truth-buttons"
 import { CompareButtons } from "./inputs/compare-buttons"

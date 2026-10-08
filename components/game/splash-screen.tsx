@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { useAudio } from "@/lib/audio-context"
 import { useI18n } from "@/lib/i18n-context"
 import { PaperBackground, WashiwayLogo } from "@/components/ui/stationery"

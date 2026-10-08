@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import type { GameMode } from "@/lib/game-types"
 import { ModeConfigSheet } from "./mode-config-sheet"
 import { WashiBinder } from "./washi-binder"

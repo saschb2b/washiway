@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n-context"
 import { cn } from "@/lib/utils"
