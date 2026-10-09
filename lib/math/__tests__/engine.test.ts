@@ -228,3 +228,14 @@ describe("localize", () => {
     expect(localize("0.375 + 1.5", "en")).toBe("0.375 + 1.5")
   })
 })
+
+describe("fractions are written in lowest terms", () => {
+  it("in fraction-of-amount tasks", () => {
+    for (const tier of [6, 7]) {
+      for (const q of sample("quick", tier, 500)) {
+        const m = /^(\d+)\/(\d+) of/.exec(en(q))
+        if (m) expect(gcd(Number(m[1]), Number(m[2])), en(q)).toBe(1)
+      }
+    }
+  })
+})

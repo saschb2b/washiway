@@ -4,7 +4,7 @@
 // multi-step chains; the strategies (compensation, near squares, halving and
 // doubling, ...) are the ones fluent mental calculators actually use.
 
-import { L, MINUS, fmt } from "./format"
+import { L, MINUS, fmt, gcd } from "./format"
 import { type Rng, chance, pick, randInt, weighted } from "./random"
 import type { Text } from "./types"
 
@@ -495,6 +495,7 @@ const swappedPercent: CalcBuilder = (rng) => {
 const fractionOfAmount: CalcBuilder = (rng) => {
   const d = pick(rng, [3, 4, 5, 6, 8])
   const n = randInt(rng, 1, d - 1)
+  if (gcd(n, d) !== 1) return fractionOfAmount(rng)
   const k = randInt(rng, 3, 15)
   const base = d * k
   return {
