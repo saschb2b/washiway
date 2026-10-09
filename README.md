@@ -11,33 +11,36 @@
   <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-f1a7c1?style=for-the-badge">
 </p>
 
-<h3 align="center">Six adaptive mini-games that keep your math sharp — one cozy minute at a time.</h3>
+<h3 align="center">Seven adaptive mini-games that keep your math sharp — one cozy minute at a time.</h3>
 
 <p align="center">
-  Mental math, number sense, estimation and early algebra for teens and adults.<br>
+  Mental math, number sense, estimation, growth and early algebra for teens and adults.<br>
   No account, no ads, no install. It runs in your browser and keeps your progress on your device.
 </p>
 
 <p align="center">
-  <img src="docs/readme/demo.webp" alt="A Mixed Bag round: tiles, number line, estimates, a missed task with its solution, and the task coming back later" width="320">
+  <img src="docs/readme/demo.webp" alt="A Mixed Bag round: comparing, mental math, undoing a +20% change, a missed claim with its fix, factor tiles and a gap to fill" width="320">
 </p>
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/readme/screens/1-menu.webp" alt="Six ways to keep your math sharp" width="24%">
-  <img src="docs/readme/screens/2-sprint.webp" alt="60-second sprints with streaks and bursts" width="24%">
-  <img src="docs/readme/screens/3-learn.webp" alt="After a miss, the solution and the trick behind it" width="24%">
-  <img src="docs/readme/screens/4-line.webp" alt="Placing 8/5 on a number line" width="24%">
+  <img src="docs/readme/screens/1-menu.webp" alt="Seven ways to keep your math sharp" width="32%">
+  <img src="docs/readme/screens/2-sprint.webp" alt="60-second sprints with streaks and bursts" width="32%">
+  <img src="docs/readme/screens/3-learn.webp" alt="After a miss, the solution and the trick behind it" width="32%">
 </p>
 <p align="center">
-  <img src="docs/readme/screens/5-ballpark.webp" alt="Ballpark: 1 billion seconds is about how long?" width="24%">
-  <img src="docs/readme/screens/6-target.webp" alt="Make the Target: two decimals that make 1" width="24%">
-  <img src="docs/readme/screens/7-levels.webp" alt="Results with level changes per skill" width="24%">
-  <img src="docs/readme/screens/8-binder.webp" alt="The washi binder with unlocked tape rolls" width="24%">
+  <img src="docs/readme/screens/4-line.webp" alt="Placing 8/5 on a number line" width="32%">
+  <img src="docs/readme/screens/5-ballpark.webp" alt="Ballpark: 1 billion seconds is about how long?" width="32%">
+  <img src="docs/readme/screens/6-target.webp" alt="Make the Target: two decimals that make 1" width="32%">
+</p>
+<p align="center">
+  <img src="docs/readme/screens/7-growth.webp" alt="Grow &amp; Shrink: 2000 that grows 10% each step while 200 is taken away stays at 2000" width="32%">
+  <img src="docs/readme/screens/8-levels.webp" alt="Results with level changes per skill" width="32%">
+  <img src="docs/readme/screens/9-binder.webp" alt="The washi binder with unlocked tape rolls" width="32%">
 </p>
 
-## Six skills, one cozy routine
+## Seven skills, one cozy routine
 
 |       | Mode                | You practice                                                                              | For example                    |
 | :---: | ------------------- | ----------------------------------------------------------------------------------------- | ------------------------------ |
@@ -47,6 +50,7 @@
 | **↔** | **Number Line**     | A precise feel for where numbers live — fractions, decimals, negatives, roots             | Place `7/8`, `−5/4`, `√47`     |
 | **□** | **Fill the Gap**    | Inverse operations, the equals sign as a balance, patterns, first algebra                 | `6x + 18 = x + 13`             |
 | **◎** | **Make the Target** | Seeing number relationships at a glance                                                   | `? × ? = 187` → `11 × 17`      |
+| **↗** | **Grow & Shrink**   | Repeated change: percent as a factor, recovering from a drop, doubling times              | `100 → −20% → ?` needs `+25%`  |
 | **★** | **Mixed Bag**       | Everything above, interleaved                                                             | —                              |
 
 Every skill has **10 levels** that adapt after each answer, so a round is never boring and never hopeless.
@@ -60,20 +64,22 @@ Washiway is built on what research on math practice supports — and doesn't cla
 - **Mistakes teach.** After a miss you see the answer and the strategy behind it. Corrective feedback is what makes retrieval practice stick ([Pashler et al., 2005](https://digitalcommons.usf.edu/psy_facpub/1773)).
 - **Misses come back.** A missed task returns a few questions later and again at the start of your next session (spaced, successive relearning).
 - **Mixing beats blocking.** Interleaved practice feels harder but is remembered better ([Rohrer & Taylor, 2007](https://digitalcommons.usf.edu/psy_facpub/1767/)).
+- **Growth you can feel.** Most people picture repeated growth as a straight line and underestimate it badly; about a third ignore compounding altogether ([Levy & Tasoff, 2016](https://eprints.lse.ac.uk/102087/); [McKenzie & Liersch, 2011](https://pages.ucsd.edu/~mckenzie/McKenzie&LierschInPressJMR.pdf)). Many also believe +x% and −x% cancel out ([Chen & Rao, 2007](https://ideas.repec.org/a/oup/jconrs/v34y2007i3p327-340.html); [Newall, 2016](https://doi.org/10.1017/s1930297500004526)). Thinking in doubling times shrinks the bias ([Schonger & Sele, 2021](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8386158/)), and understanding compounding changes real decisions ([Song, 2020](https://ideas.repec.org/a/oup/rfinst/v33y2020i2p916-949..html)). Grow & Shrink trains that math — percent as a factor, changes that don't cancel, doubling times — with plain numbers and no promises about anyone's finances.
 - **Number sense, not just drills.** Number-line accuracy and fraction magnitude knowledge are linked to later math achievement ([Schneider et al., 2018](https://www.uni-trier.de/fileadmin/fb1/prof/PSY/PAE/Team/Schneider/SchneiderEtAl2018.pdf); [Siegler et al., 2012](https://www.psychologicalscience.org/news/releases/knowledge-of-fractions-and-long-division-predicts-long-term-math-success.html)).
 
 <details>
 <summary><b>What each skill trains, in detail</b></summary>
 
-| Skill               | What it trains                                                                                          | Why                                                                                                                                 |
-| ------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| **Quick Math**      | A 10-level ladder from making ten to two-digit products, squares, percentages and multi-step chains     | Fluency comes from retrieval plus strategies (compensation, near squares, ×11, x% of y = y% of x); every miss shows the strategy    |
-| **Fact or Fib**     | Judging claims: near-miss results and misconceptions (1/2 + 1/3 ≠ 2/5, +50% −50% ≠ 0)                   | Wrong claims are never far off, so a glance can't reject them; a real check (last digit, parity, rough size, working backwards) can |
-| **Ballpark**        | Closest estimate and "which is bigger" for products, percentages, fractions, powers and Fermi questions | Estimation matters in daily life, and knowing fraction magnitudes is linked to later algebra success                                |
-| **Number Line**     | Placing whole numbers, negatives, fractions, decimals, roots and constants                              | Number-line accuracy correlates with math achievement (r ≈ .44 in a meta-analysis), most strongly for fractions                     |
-| **Fill the Gap**    | Inverse operations, the equals sign as a balance, number patterns, linear equations                     | Relational understanding of "=" and solving for an unknown are the bridge to algebra                                                |
-| **Make the Target** | Pick tiles that make a number: bonds to 10/100/1000/1, factor pairs, differences                        | Seeing number relationships at a glance is what fluent calculators do                                                               |
-| **Mixed Bag**       | All skills interleaved                                                                                  | Interleaved practice is remembered better than blocked practice                                                                     |
+| Skill               | What it trains                                                                                                | Why                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Quick Math**      | A 10-level ladder from making ten to two-digit products, squares, percentages and multi-step chains           | Fluency comes from retrieval plus strategies (compensation, near squares, ×11, x% of y = y% of x); every miss shows the strategy    |
+| **Fact or Fib**     | Judging claims: near-miss results and misconceptions (1/2 + 1/3 ≠ 2/5, +50% −50% ≠ 0)                         | Wrong claims are never far off, so a glance can't reject them; a real check (last digit, parity, rough size, working backwards) can |
+| **Ballpark**        | Closest estimate and "which is bigger" for products, percentages, fractions, powers and Fermi questions       | Estimation matters in daily life, and knowing fraction magnitudes is linked to later algebra success                                |
+| **Number Line**     | Placing whole numbers, negatives, fractions, decimals, roots and constants                                    | Number-line accuracy correlates with math achievement (r ≈ .44 in a meta-analysis), most strongly for fractions                     |
+| **Fill the Gap**    | Inverse operations, the equals sign as a balance, number patterns, linear equations                           | Relational understanding of "=" and solving for an unknown are the bridge to algebra                                                |
+| **Make the Target** | Pick tiles that make a number: bonds to 10/100/1000/1, factor pairs, differences                              | Seeing number relationships at a glance is what fluent calculators do                                                               |
+| **Grow & Shrink**   | Percent as a factor, changes in a row, undoing a change, doubling times, percentage points, powers like 1.1¹⁰ | Most people think of repeated change as linear; seeing a change as a factor and growth as doubling times corrects that              |
+| **Mixed Bag**       | All skills interleaved                                                                                        | Interleaved practice is remembered better than blocked practice                                                                     |
 
 The generators live in `lib/math/`. Tests recompute every generated task with an independent expression evaluator across all skills and levels, and simulate players of different strength to check that levels settle where they should.
 
