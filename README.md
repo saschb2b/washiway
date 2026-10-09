@@ -11,7 +11,7 @@
   <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-f1a7c1?style=for-the-badge">
 </p>
 
-<h3 align="center">Seven adaptive mini-games that keep your math sharp — one cozy minute at a time.</h3>
+<h3 align="center">Adaptive mini-games that keep your math sharp — one cozy minute at a time.</h3>
 
 <p align="center">
   Mental math, number sense, estimation, growth and early algebra for teens and adults.<br>
@@ -25,7 +25,7 @@
 ## Screenshots
 
 <p align="center">
-  <img src="docs/readme/screens/1-menu.webp" alt="Seven ways to keep your math sharp" width="32%">
+  <img src="docs/readme/screens/1-menu.webp" alt="The menu: pick what to practice" width="32%">
   <img src="docs/readme/screens/2-sprint.webp" alt="60-second sprints with streaks and bursts" width="32%">
   <img src="docs/readme/screens/3-learn.webp" alt="After a miss, the solution and the trick behind it" width="32%">
 </p>
@@ -40,7 +40,7 @@
   <img src="docs/readme/screens/9-binder.webp" alt="The washi binder with unlocked tape rolls" width="32%">
 </p>
 
-## Seven skills, one cozy routine
+## Pick what to practice
 
 |       | Mode                | You practice                                                                              | For example                    |
 | :---: | ------------------- | ----------------------------------------------------------------------------------------- | ------------------------------ |
@@ -53,7 +53,7 @@
 | **↗** | **Grow & Shrink**   | Repeated change: percent as a factor, recovering from a drop, doubling times              | `100 → −20% → ?` needs `+25%`  |
 | **★** | **Mixed Bag**       | Everything above, interleaved                                                             | —                              |
 
-Every skill has **10 levels** that adapt after each answer, so a round is never boring and never hopeless.
+Every skill keeps its own level, which adapts after each answer, so a round is never boring and never hopeless.
 
 ## Why it works
 
@@ -87,7 +87,7 @@ The generators live in `lib/math/`. Tests recompute every generated task with an
 
 ## Features
 
-- 🎯 **Adaptive levels 1–10** per skill, saved between sessions
+- 🎯 **Adaptive levels** per skill, saved between sessions
 - ⏱️ **60-second sprints** with streaks, multipliers and burst bonuses — or **20 tasks without a clock**
 - 💡 **Worked solutions** after every miss, and a **review deck** of tasks to revisit
 - 🎀 **Washi binder** — unlock themed tape rolls through achievements and re-theme the whole app
