@@ -102,6 +102,12 @@ const translations: Record<Language, Translations> = {
         description: "Combine tiles to hit it",
         trains: "Seeing number relationships at a glance: bonds to 10, 100 and 1, factor pairs, differences.",
       },
+      growth: {
+        name: "Grow & Shrink",
+        description: "Percent, growth and doubling",
+        trains:
+          "A feel for repeated change: percent as a factor, getting back after a drop, doubling times, percent vs. percentage points — and why small rates add up.",
+      },
       mix: {
         name: "Mixed Bag",
         description: "Every skill, interleaved",
@@ -186,6 +192,12 @@ const translations: Record<Language, Translations> = {
         name: "Zielzahl",
         description: "Kombiniere die Kärtchen",
         trains: "Zahlbeziehungen auf einen Blick: Ergänzen zu 10, 100 und 1, Faktorpaare, Differenzen.",
+      },
+      growth: {
+        name: "Wachsen & Schrumpfen",
+        description: "Prozent, Wachstum, Verdoppeln",
+        trains:
+          "Ein Gefühl für wiederholte Veränderung: Prozent als Faktor, zurück nach einem Minus, Verdopplungszeit, Prozent vs. Prozentpunkte – und warum kleine Raten sich summieren.",
       },
       mix: {
         name: "Gemischt",

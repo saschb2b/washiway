@@ -121,6 +121,7 @@ function evaluateChain(text: string): number {
   let value = evaluate(start)
   for (const step of steps) {
     if (step === "²") value = value * value
+    else if (step.endsWith("%")) value *= 1 + Number(step.slice(0, -1)) / 100
     else {
       const operand = Number(step.slice(1))
       const op = step[0]

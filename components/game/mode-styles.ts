@@ -12,6 +12,7 @@ export const MODE_STYLES: Record<
   line: { color: "yellow", pattern: "stripes", icon: "↔" },
   gap: { color: "pink", pattern: "zigzag", icon: "□" },
   target: { color: "lavender", pattern: "dots", icon: "◎" },
+  growth: { color: "mint", pattern: "dots", icon: "↗" },
   mix: { color: "blue", pattern: "zigzag", icon: "★" },
 }
 

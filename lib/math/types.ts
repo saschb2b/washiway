@@ -1,9 +1,9 @@
 // Skills are the trainable areas; each one keeps its own adaptive level.
-export const SKILLS = ["quick", "check", "estimate", "line", "gap", "target"] as const
+export const SKILLS = ["quick", "check", "estimate", "line", "gap", "target", "growth"] as const
 export type Skill = (typeof SKILLS)[number]
 
 // Game modes are what the menu offers: every skill plus an interleaved mix.
-export const GAME_MODES = ["quick", "check", "estimate", "line", "gap", "target", "mix"] as const
+export const GAME_MODES = ["quick", "check", "estimate", "line", "gap", "target", "growth", "mix"] as const
 export type GameMode = (typeof GAME_MODES)[number]
 
 export const MIN_LEVEL = 1

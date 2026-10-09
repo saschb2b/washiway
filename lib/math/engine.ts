@@ -2,6 +2,7 @@ import { type Rng, defaultRng, pick } from "./random"
 import { generateCheck } from "./skills/check"
 import { generateEstimate } from "./skills/estimate"
 import { generateGap } from "./skills/gap"
+import { generateGrowth } from "./skills/growth"
 import { generateLine } from "./skills/line"
 import { generateQuick } from "./skills/quick"
 import { combine, generateTarget } from "./skills/target"
@@ -24,6 +25,7 @@ const GENERATORS: Record<Skill, (tier: number, rng: Rng) => QuestionDraft> = {
   line: generateLine,
   gap: generateGap,
   target: generateTarget,
+  growth: generateGrowth,
 }
 
 let counter = 0

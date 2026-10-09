@@ -21,19 +21,20 @@ function fmtNumber(n: number): string {
 
 // Options around `correct`; rejects sets where another option is as close to
 // `actual` as the correct one, so there is always exactly one best answer.
-function closestOf(
+export function closestOf(
   display: Text,
   actual: number,
   candidates: number[],
   correct: number,
   explanation: Text,
+  prompt: Localized = CLOSEST,
 ): Draft | null {
   const options = [...new Set(candidates)].sort((x, y) => x - y)
   const distances = options.map((o) => Math.abs(o - actual))
   const best = Math.min(...distances)
   const answer = options.indexOf(correct)
   if (answer < 0 || distances[answer] !== best || distances.filter((d) => d - best < 1e-9).length > 1) return null
-  return { kind: "choice", prompt: CLOSEST, display, options: options.map(fmtNumber), answer, explanation }
+  return { kind: "choice", prompt, display, options: options.map(fmtNumber), answer, explanation }
 }
 
 // Three powers-of-ten neighbours with the right one at a random position.
@@ -61,7 +62,7 @@ function retry(builder: Builder, rng: Rng, draft: Draft | null): Draft {
   return draft ?? builder(rng)
 }
 
-function compare(a: Text, av: number, b: Text, bv: number, explanation: Text, allowEqual: boolean): Draft {
+export function compare(a: Text, av: number, b: Text, bv: number, explanation: Text, allowEqual: boolean): Draft {
   const options: Text[] = [a, b]
   let answer: number
   if (Math.abs(av - bv) < 1e-9) {
