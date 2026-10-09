@@ -348,7 +348,7 @@ export function WashiwayLogo({ size = "md", className }: WashiwayLogoProps) {
   return (
     <div className={cn("relative inline-block", className)}>
       <h1 className={cn("font-extrabold tracking-tight text-foreground", sizeClasses[size])}>
-        Washi<span style={{ color: "var(--theme-primary)" }}>way</span>
+        Washi<span style={{ color: "var(--theme-secondary)" }}>way</span>
       </h1>
       {/* Signature washi tape underline */}
       <div
